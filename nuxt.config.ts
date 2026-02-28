@@ -1,39 +1,36 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/ui', '@nuxtjs/color-mode'],
+  modules: ["@nuxt/eslint", "@nuxt/ui", "@nuxtjs/color-mode"],
 
   ssr: false,
 
   devtools: {
-    enabled: true
+    enabled: true,
   },
 
-  css: ['~/assets/css/main.css'],
+  css: ["~/assets/css/main.css"],
 
   colorMode: {
-    preference: 'light',
-    fallback: 'light',
-    classSuffix: ''
+    preference: "light",
+    fallback: "light",
+    classSuffix: "",
   },
 
   runtimeConfig: {
     public: {
-      googleMapsKey: 'LEAKED_KEY_REMOVED'
-    }
+      googleMapsKey: "LEAKED_KEY_REMOVED",
+    },
   },
 
   routeRules: {
-    '/': { prerender: false }
+    "/": { prerender: false },
   },
 
-  compatibilityDate: '2025-01-15',
+  compatibilityDate: "2025-01-15",
 
   eslint: {
     config: {
-      stylistic: {
-        commaDangle: 'never',
-        braceStyle: '1tbs'
-      }
-    }
-  }
-})
+      stylistic: false,
+    },
+  },
+});

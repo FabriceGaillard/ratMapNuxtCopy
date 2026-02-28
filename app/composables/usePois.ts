@@ -1,9 +1,9 @@
-import { framacarteRepository } from '~/repositories/FramacarteRepository'
+import { framacarteRepository } from "~/repositories/FramacarteRepository";
 
 export const usePois = () => {
   const getPois = async (mapId: string) => {
     try {
-      const pois = await framacarteRepository.getAllPois(mapId)
+      const pois = await framacarteRepository.getAllPois(mapId);
       return pois.map(poi => ({
         id: poi.id,
         name: poi.name,
@@ -14,14 +14,14 @@ export const usePois = () => {
         description: poi.description,
         layer: poi.layer,
         properties: poi.properties
-      }))
+      }));
     } catch (error) {
-      console.error('Error fetching POIs:', error)
-      return []
+      console.error("Error fetching POIs:", error);
+      return [];
     }
-  }
+  };
 
   return {
     getPois
-  }
-}
+  };
+};
