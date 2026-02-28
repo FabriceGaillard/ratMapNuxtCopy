@@ -16,3 +16,22 @@
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
 }
+
+/* Google Maps InfoWindow Styles */
+.gm-style-iw-d {
+  background: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden !important;
+}
+
+.gm-style-iw-chr {
+  display: none !important;
+}
+
+.gm-style-iw {
+  padding: 0 !important;
+}

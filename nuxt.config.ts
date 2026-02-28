@@ -12,7 +12,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   routeRules: {
-    '/': { prerender: true }
+    '/': { prerender: false }
   },
 
   compatibilityDate: '2025-01-15',
@@ -24,5 +24,13 @@ export default defineNuxtConfig({
         braceStyle: '1tbs'
       }
     }
-  }
+  },
+
+  runtimeConfig: {
+    public: {
+      googleMapsKey: 'LEAKED_KEY_REMOVED'
+    }
+  },
+
+  ssr: false
 })
