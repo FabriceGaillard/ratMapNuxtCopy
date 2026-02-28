@@ -11,16 +11,18 @@ export const useGoogleMaps = () => {
     const loader = new Loader({
       apiKey: config.public.googleMapsKey,
       version: "weekly",
-      libraries: ["places"]
+      libraries: ["places", "geocoding", "marker"], // 👈 AJOUT
     });
 
     await loader.importLibrary("maps");
     await loader.importLibrary("places");
+    await loader.importLibrary("geocoding");
+    await loader.importLibrary("marker"); // 👈 IMPORTANT
 
     return (window as any).google.maps;
   };
 
   return {
-    loadGoogleMaps
+    loadGoogleMaps,
   };
 };
