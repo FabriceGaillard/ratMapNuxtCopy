@@ -1,47 +1,53 @@
 <template>
-  <div class="relative w-full h-screen overflow-hidden">
-    <!-- Vertical Slider -->
-    <div class="fixed top-5 left-5 z-10">
-      <USlider v-model="maxHours" :min="1" :max="15" :step="1" class="w-12" />
-      <UBadge variant="subtle">{{ maxHours }}h</UBadge>
-    </div>
+  <div :class="['relative w-full h-screen overflow-hidden']">
+    <div :class="{ hidden: streetViewVisible }">
+      <div class="fixed top-5 left-5 z-10">
+        <USlider v-model="maxHours" :min="1" :max="15" :step="1" class="w-12" />
+        <UBadge variant="subtle">{{ maxHours }}h</UBadge>
+      </div>
 
-    <!-- Search Container -->
-    <div class="absolute top-2.5 left-20 z-5">
-      <UFieldGroup>
-        <UInput
-          id="searchBox"
-          v-model="searchQuery"
-          placeholder="Chercher un lieu..."
-          icon="i-heroicons-magnifying-glass-20-solid"
-          class="w-[250px]"
-        />
-        <UButton
-          id="searchBtn"
-          icon="i-heroicons-magnifying-glass-20-solid"
-          aria-label="Rechercher"
-          color="neutral"
-          variant="subtle"
-        />
-        <UButton
-          id="directionsBtn"
-          icon="i-heroicons-map-20-solid"
-          aria-label="Itinéraire"
-          color="neutral"
-          variant="subtle"
-          @click="handleDirections"
-        />
-      </UFieldGroup>
+      <!-- Search Container -->
+      <div :class="['absolute top-2.5 left-20 z-5']">
+        <UFieldGroup>
+          <UInput
+            id="searchBox"
+            v-model="searchQuery"
+            placeholder="Chercher un lieu..."
+            icon="i-heroicons-magnifying-glass-20-solid"
+            class="w-[250px]"
+          />
+          <UButton
+            id="searchBtn"
+            icon="i-heroicons-magnifying-glass-20-solid"
+            aria-label="Rechercher"
+            color="neutral"
+            variant="subtle"
+          />
+          <UButton
+            id="directionsBtn"
+            icon="i-heroicons-map-20-solid"
+            aria-label="Itinéraire"
+            color="neutral"
+            variant="subtle"
+            @click="handleDirections"
+          />
+        </UFieldGroup>
+      </div>
+      <UDropdownMenu :items="items" class="fixed top-3 right-3 z-10">
+        <UButton icon="i-lucide-menu" color="neutral" variant="outline" />
+      </UDropdownMenu>
     </div>
-    <UDropdownMenu :items="items" class="fixed top-3 right-3 z-10">
-      <UButton icon="i-lucide-menu" color="neutral" variant="outline" />
-    </UDropdownMenu>
+    <!-- Vertical Slider -->
 
     <!-- Map -->
     <div id="map" class="w-full h-full" />
 
     <!-- POI Details Drawer -->
-    <PoiDetailsDrawer v-model:open="panel.open" :poi="panel.poi" />
+    <PoiDetailsDrawer
+      :open="panel.open"
+      :poi="panel.poi"
+      @close="panel.open = false"
+    />
   </div>
 </template>
 
@@ -52,6 +58,9 @@ import { useSearch } from "~/composables/useSearch";
 import { useDirections } from "~/composables/useDirections";
 import { useGoogleMaps } from "~/composables/useGoogleMaps";
 import { usePoiDetails } from "~/composables/usePoiDetails";
+
+// maps configuration has been moved to a utility module
+import { createMaps } from "~/utils/maps";
 
 const { getPois } = usePois();
 const { initSearch } = useSearch();
@@ -82,54 +91,14 @@ let searchBox: any = null;
 let pois: any[] = [];
 let markers: any[] = [];
 
-const maps = [
-  {
-    label: "Tops Assos",
-    id: "221549",
-    color: "info",
-    checked: ref(true),
-    icon: "material-symbols:location-on",
-    type: "checkbox" as const,
-    onUpdateChecked(checked: boolean) {
-      if (maps[0]) {
-        maps[0].checked.value = checked;
-      }
-      refreshPois();
-    },
-    onSelect(e: Event) {
-      e.preventDefault();
-    },
-  },
-  {
-    label: "Mauvaises Assos",
-    id: "221570",
-    color: "success",
-    icon: "material-symbols:location-on",
-    checked: ref(false),
-    type: "checkbox" as const,
-    onUpdateChecked(checked: boolean) {
-      if (maps[1]) {
-        maps[1].checked.value = checked;
-      }
-      refreshPois();
-    },
-    onSelect(e: Event) {
-      e.preventDefault();
-    },
-  },
-];
+// flag to hide main container when Street View is active
+const streetViewVisible = ref(false);
 
-const items = ref([
-  [
-    {
-      label: "Points of Interest",
-      type: "label",
+// 'maps' will be initialized via factory so that it can refer to refreshPois
+let maps: any[] = [];
 
-      icon: "lucide:house-heart",
-    },
-  ],
-  maps,
-]);
+// items depends on maps, update after maps is created
+const items = ref<any[]>([]);
 
 const createMap = (): any => {
   const mapElement = document.getElementById("map");
@@ -168,7 +137,10 @@ const displayPois = (poisData: any[]) => {
       panel.poi = enrichedPoi;
       console.log(enrichedPoi);
       panel.open = true;
+
+      // pan to the clicked POI and set a fixed zoom level
       map.panTo(poi.position);
+      map.setZoom(16);
     });
 
     markers.push(marker);
@@ -198,12 +170,32 @@ async function refreshPois() {
   displayPois(pois);
 }
 
+// create the maps array once refreshPois is defined
+maps = createMaps(refreshPois);
+// initialize items now that maps exists
+items.value = [
+  [
+    {
+      label: "Points of Interest",
+      type: "label",
+      icon: "lucide:house-heart",
+    },
+  ],
+  maps,
+];
+
 onMounted(async () => {
   // Load Google Maps API
   await loadGoogleMaps();
 
   // Initialize map
   map = createMap();
+
+  // listen for Street View visibility changes
+  const street = map.getStreetView();
+  street.addListener("visible_changed", () => {
+    streetViewVisible.value = street.getVisible();
+  });
 
   // Initialize search
   searchBox = initSearch(map);

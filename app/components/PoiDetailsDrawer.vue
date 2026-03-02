@@ -1,12 +1,16 @@
 <template>
-  <UDrawer :modal="false">
+  <UDrawer
+    :modal="false"
+    :direction="drawerDirection"
+    :class="[drawerHeightClass, 'w-full sm:w-150 overflow-y-auto']"
+  >
     <template #body>
       <UButton
         color="neutral"
         variant="soft"
         icon="i-lucide-x"
         class="absolute right-4 top-8"
-        @click="emit('update:open', false)"
+        @click="emit('close')"
       />
 
       <div class="space-y-4">
@@ -120,13 +124,27 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+import { useMediaQuery } from "@vueuse/core";
+
 const props = defineProps<{
   poi: any | null;
 }>();
 
 const emit = defineEmits<{
-  "update:open": [value: boolean];
+  close: [];
 }>();
+
+// breakpoint "sm" (640px) – adapte si tu utilises un autre seuil
+const isDesktop = useMediaQuery("(min-width: 640px)");
+
+const drawerDirection = computed<"left" | "right" | "top" | "bottom">(() =>
+  isDesktop.value ? "right" : "bottom",
+);
+
+const drawerHeightClass = computed(() =>
+  isDesktop.value ? "h-full" : "h-[50vh]",
+);
 
 const getLat = () => {
   if (!props.poi) return "";
