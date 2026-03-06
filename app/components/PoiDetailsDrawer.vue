@@ -25,65 +25,8 @@
           >
         </p>
 
-        <div class="flex gap-2">
-          <UButton color="neutral" variant="soft" icon="i-lucide-share-2">
-            Partager
-          </UButton>
-          <UButton
-            color="neutral"
-            variant="soft"
-            icon="i-heroicons-arrow-up-right-20-solid"
-          >
-            Voir plus
-          </UButton>
-          <UButton color="neutral" variant="soft" icon="i-lucide-map">
-            Itinéraire
-          </UButton>
-        </div>
-
-        <!-- street view image only -->
-        <div v-if="poi.streetViewUrl" class="overflow-hidden rounded-md">
-          <img
-            :src="poi.streetViewUrl"
-            class="w-full h-auto object-cover"
-            alt="Street view of address"
-          />
-        </div>
-
         <!-- Details -->
         <div v-if="poi" class="space-y-4">
-          <!-- Coordinates -->
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <p class="text-xs text-slate-500 uppercase tracking-wider">
-                Latitude
-              </p>
-              <p class="text-sm text-slate-900 dark:text-white font-mono mt-1">
-                {{ getLat() }}
-              </p>
-            </div>
-            <div>
-              <p class="text-xs text-slate-500 uppercase tracking-wider">
-                Longitude
-              </p>
-              <p class="text-sm text-slate-900 dark:text-white font-mono mt-1">
-                {{ getLng() }}
-              </p>
-            </div>
-          </div>
-
-          <!-- Address (from reverse geocoding) -->
-
-          <!-- Layer -->
-          <!-- <div v-if="poi.layer">
-            <p class="text-xs text-slate-500 uppercase tracking-wider">
-              Catégorie
-            </p>
-            <p class="text-sm text-slate-900 dark:text-white mt-1">
-              {{ poi.layer }}
-            </p>
-          </div> -->
-
           <!-- Description -->
           <div v-if="poi.description">
             <p class="text-xs text-slate-500 uppercase tracking-wider">
@@ -100,23 +43,6 @@
           <UBadge variant="soft" :color="poi.map.color">
             {{ poi.map.label }}
           </UBadge>
-
-          <!-- Place types -->
-          <!-- <div v-if="poi.types && poi.types.length > 0">
-            <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">
-              Types de lieu
-            </p>
-            <div class="flex flex-wrap gap-2">
-              <UBadge
-                v-for="type in poi.types"
-                :key="type"
-                variant="subtle"
-                color="neutral"
-              >
-                {{ formatPropertyKey(type) }}
-              </UBadge>
-            </div>
-          </div> -->
         </div>
       </div>
     </template>

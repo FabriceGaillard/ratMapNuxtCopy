@@ -1,4 +1,5 @@
 import { ref } from "vue";
+import framacarteData from "~/data/framacarteData";
 
 export type MapItem = {
   label: string;
@@ -12,38 +13,17 @@ export type MapItem = {
 };
 
 export function createMaps(refreshPois: () => void): MapItem[] {
-  const maps: MapItem[] = [
-    {
-      label: "Tops Assos",
-      id: "221549",
-      color: "info",
-      checked: ref(true),
-      icon: "material-symbols:location-on",
-      type: "checkbox",
-      onUpdateChecked(checked: boolean) {
-        maps[0]!.checked.value = checked;
-        refreshPois();
-      },
-      onSelect(e: Event) {
-        e.preventDefault();
-      },
+  const maps: MapItem[] = framacarteData.map((mapData, index) => ({
+    ...mapData,
+    type: "checkbox" as const,
+    onUpdateChecked(checked: boolean) {
+      maps[index]!.checked.value = checked;
+      refreshPois();
     },
-    {
-      label: "Mauvaises Assos",
-      id: "221570",
-      color: "success",
-      checked: ref(false),
-      icon: "material-symbols:location-on",
-      type: "checkbox",
-      onUpdateChecked(checked: boolean) {
-        maps[1]!.checked.value = checked;
-        refreshPois();
-      },
-      onSelect(e: Event) {
-        e.preventDefault();
-      },
+    onSelect(e: Event) {
+      e.preventDefault();
     },
-  ];
+  }));
 
   return maps;
 }

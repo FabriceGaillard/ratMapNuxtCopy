@@ -1,13 +1,8 @@
 <template>
-  <div :class="['relative w-full h-screen overflow-hidden']">
+  <div :class="['relative w-full h-screen overflow-hidden w-full']">
     <div :class="{ hidden: streetViewVisible }">
-      <div class="fixed top-5 left-5 z-10">
-        <USlider v-model="maxHours" :min="1" :max="15" :step="1" class="w-12" />
-        <UBadge variant="subtle">{{ maxHours }}h</UBadge>
-      </div>
-
       <!-- Search Container -->
-      <div :class="['absolute top-2.5 left-20 z-5']">
+      <div :class="['absolute top-3 left-3 z-5']">
         <UFieldGroup>
           <UInput
             id="searchBox"
@@ -25,17 +20,37 @@
           />
           <UButton
             id="directionsBtn"
-            icon="i-heroicons-map-20-solid"
+            icon="lucide:split"
             aria-label="Itinéraire"
             color="neutral"
             variant="subtle"
             @click="handleDirections"
+            square
+            :ui="{
+              leadingIcon: 'w-4 h-4',
+            }"
           />
         </UFieldGroup>
       </div>
       <UDropdownMenu :items="items" class="fixed top-3 right-3 z-10">
         <UButton icon="i-lucide-menu" color="neutral" variant="outline" />
       </UDropdownMenu>
+
+      <div :class="['absolute bottom-6 left-0 px-3 z-5 w-full']">
+        <USlider
+          v-model="maxHours"
+          :min="1"
+          :max="15"
+          :step="1 / 12"
+          class="w-full"
+          color="gray"
+          :tooltip="{
+            open: true,
+            text: displayHours,
+          }"
+          size="xl"
+        />
+      </div>
     </div>
     <!-- Vertical Slider -->
 
@@ -80,6 +95,14 @@ const getHex = (color: string, shade = 500) => {
 };
 
 const maxHours = ref(5);
+
+const displayHours = computed(() => {
+  const h = Math.floor(maxHours.value);
+  const m = Math.round((maxHours.value - h) * 60);
+
+  return `${h}h ${m ? m + "min" : ""}`;
+});
+
 const searchQuery = ref("");
 const panel = reactive({
   open: false,
@@ -105,8 +128,7 @@ const createMap = (): any => {
   return new (window as any).google.maps.Map(mapElement, {
     zoom: 5,
     center: { lat: 46.5, lng: 2.5 },
-    mapTypeControl: false,
-    fullscreenControl: false,
+    disableDefaultUI: true,
   });
 };
 
@@ -140,7 +162,7 @@ const displayPois = (poisData: any[]) => {
 
       // pan to the clicked POI and set a fixed zoom level
       map.panTo(poi.position);
-      map.setZoom(16);
+      map.setZoom(7);
     });
 
     markers.push(marker);
