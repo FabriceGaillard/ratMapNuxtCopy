@@ -1,49 +1,59 @@
 export const useBoundary = () => {
-  let currentBoundary: any = null;
+  let currentBoundaries: any[] = [];
 
   const drawBoundary = async (map: any, place: any) => {
-    // Remove previous boundary
-    if (currentBoundary) {
-      currentBoundary.setMap(null);
-    }
+    // Remove previous boundaries
+    currentBoundaries.forEach((boundary) => boundary.setMap(null));
+    currentBoundaries = [];
 
     try {
       const searchQuery = place.formatted_address || place.name;
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&polygon_geojson=1`
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&polygon_geojson=1`,
       );
       const results = await response.json();
 
-      if (results.length > 0 && results[0].geojson && results[0].geojson.coordinates) {
-        const geojson = results[0].geojson;
-        let polygonCoords = [];
+      // Process only the first result but display all its polygons
+      const resultsToProcess = results.length > 0 ? [results[0]] : [];
+      resultsToProcess.forEach((result) => {
+        if (result.geojson && result.geojson.coordinates) {
+          const geojson = result.geojson;
+          const polygons = [];
 
-        // Handle different geometry types
-        if (geojson.type === "Polygon") {
-          polygonCoords = geojson.coordinates[0].map((coord: any) => ({
-            lat: coord[1],
-            lng: coord[0]
-          }));
-        } else if (geojson.type === "MultiPolygon") {
-          polygonCoords = geojson.coordinates[0][0].map((coord: any) => ({
-            lat: coord[1],
-            lng: coord[0]
-          }));
-        }
+          // Handle different geometry types
+          if (geojson.type === "Polygon") {
+            polygons.push(geojson.coordinates[0]);
+          } else if (geojson.type === "MultiPolygon") {
+            // Add all polygons from the MultiPolygon
+            geojson.coordinates.forEach((polygon: any) => {
+              polygons.push(polygon[0]);
+            });
+          }
 
-        if (polygonCoords.length > 0) {
-          currentBoundary = new (window as any).google.maps.Polygon({
-            paths: polygonCoords,
-            map,
-            strokeColor: "#FF9800",
-            strokeOpacity: 0.9,
-            strokeWeight: 2,
-            fillColor: "#FF9800",
-            fillOpacity: 0.15
+          // Create a polygon for each geometry
+          polygons.forEach((coords: any) => {
+            const polygonCoords = coords.map((coord: any) => ({
+              lat: coord[1],
+              lng: coord[0],
+            }));
+
+            if (polygonCoords.length > 0) {
+              const boundary = new (window as any).google.maps.Polygon({
+                paths: polygonCoords,
+                map,
+                strokeColor: "#006aff",
+                strokeOpacity: 0.9,
+                strokeWeight: 2,
+                fillColor: "#006aff",
+                fillOpacity: 0.15,
+              });
+              currentBoundaries.push(boundary);
+            }
           });
-          return true;
         }
-      }
+      });
+
+      return currentBoundaries.length > 0;
     } catch (err) {
       console.warn("Could not fetch boundaries:", err);
     }
@@ -52,6 +62,6 @@ export const useBoundary = () => {
   };
 
   return {
-    drawBoundary
+    drawBoundary,
   };
 };
