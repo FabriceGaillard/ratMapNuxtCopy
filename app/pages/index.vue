@@ -113,6 +113,7 @@ let map: any = null;
 let searchBox: any = null;
 let pois: any[] = [];
 let markers: any[] = [];
+let originMarker: any = null;
 
 // flag to hide main container when Street View is active
 const streetViewVisible = ref(false);
@@ -149,7 +150,7 @@ const displayPois = (poisData: any[]) => {
         fillOpacity: 1,
         strokeWeight: 1,
         strokeColor: getHex(poi.map.color, 700),
-        scale: 2,
+        scale: 1,
         anchor: new google.maps.Point(7, 20),
       },
     });
@@ -174,6 +175,29 @@ const handleDirections = () => {
   if (!places || places.length === 0) {
     console.warn("Please search for a location first");
     return;
+  }
+
+  // Remove previous origin marker if it exists
+  if (originMarker) {
+    originMarker.setMap(null);
+  }
+
+  // Add new origin marker at the search location
+  const originLocation = places[0].geometry?.location;
+  if (originLocation) {
+    originMarker = new (window as any).google.maps.Marker({
+      position: originLocation,
+      map,
+      title: "Point de départ",
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: "white",
+        fillOpacity: 1,
+        strokeColor: "black",
+        strokeWeight: 2,
+        scale: 5,
+      },
+    });
   }
 
   const origin = places[0].formatted_address || places[0].name;
