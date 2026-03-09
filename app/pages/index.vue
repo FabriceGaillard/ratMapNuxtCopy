@@ -214,7 +214,7 @@ const handleDirections = async () => {
 
   const origin = places[0].formatted_address || places[0].name;
   const results = await initDirections(map, pois, origin, maxHours.value);
-  
+
   if (results.length > 0) {
     // Enrich POI data with additional details
     const enrichedResults = await Promise.all(
