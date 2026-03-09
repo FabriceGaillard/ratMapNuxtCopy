@@ -63,6 +63,13 @@
       :poi="panel.poi"
       @close="panel.open = false"
     />
+
+    <!-- Directions Drawer -->
+    <DirectionsDrawer
+      :open="directionsPanel.open"
+      :directions="directionsPanel.directions"
+      @close="directionsPanel.open = false"
+    />
   </div>
 </template>
 
@@ -107,6 +114,11 @@ const searchQuery = ref("");
 const panel = reactive({
   open: false,
   poi: null,
+});
+
+const directionsPanel = reactive({
+  open: false,
+  directions: [],
 });
 
 let map: any = null;
@@ -170,7 +182,7 @@ const displayPois = (poisData: any[]) => {
   });
 };
 
-const handleDirections = () => {
+const handleDirections = async () => {
   const places = searchBox?.getPlaces();
   if (!places || places.length === 0) {
     console.warn("Please search for a location first");
@@ -201,7 +213,21 @@ const handleDirections = () => {
   }
 
   const origin = places[0].formatted_address || places[0].name;
-  initDirections(map, pois, origin, maxHours.value);
+  const results = await initDirections(map, pois, origin, maxHours.value);
+  
+  if (results.length > 0) {
+    // Enrich POI data with additional details
+    const enrichedResults = await Promise.all(
+      results.map(async (result) => ({
+        ...result,
+        poi: await enrichPoiData(result.poi),
+      })),
+    );
+    directionsPanel.directions = enrichedResults;
+    directionsPanel.open = true;
+  } else {
+    console.warn("No directions found for the given criteria");
+  }
 };
 
 async function refreshPois() {
