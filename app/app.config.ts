@@ -201,10 +201,10 @@ export default defineAppConfig({
       variants: {
         color: {
           gray: {
-            root: "border-1 rounded border-gray-500",
-            range: "bg-gray-200",
+            root: "rounded border-gray-400",
+            range: "bg-accented",
             thumb: "ring-gray-400 focus-visible:outline-gray-200/50",
-            track: "bg-white",
+            track: "bg-muted",
           },
         },
       },

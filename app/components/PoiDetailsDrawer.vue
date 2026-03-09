@@ -24,6 +24,7 @@
             >{{ addressPart.trim() }}</span
           >
         </p>
+        `
 
         <!-- Details -->
         <div v-if="poi" class="space-y-4">

@@ -7,7 +7,7 @@ export const useBoundary = () => {
     currentBoundaries = [];
 
     try {
-      const searchQuery = place.formatted_address || place.name;
+      const searchQuery = place.formattedAddress || place.displayName;
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&polygon_geojson=1`,
       );

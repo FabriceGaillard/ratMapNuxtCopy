@@ -1,40 +1,67 @@
+import { ref } from "vue";
+import { useBoundary } from "./useBoundary";
+
 export const useSearch = () => {
   const { drawBoundary } = useBoundary();
+  const selectedPlace = ref<any>(null);
 
-  const initSearch = (map: any) => {
-    const searchBox = new (window as any).google.maps.places.SearchBox(
-      document.getElementById("searchBox")
-    );
+  const initSearch = async (map: any) => {
+    const { PlaceAutocompleteElement } = (await (
+      window as any
+    ).google.maps.importLibrary("places")) as any;
 
-    const fitSearchResults = async (searchBox: any) => {
-      const places = searchBox.getPlaces();
-      if (places.length === 0) return;
+    // Create the PlaceAutocompleteElement
+    const placeAutocomplete = new PlaceAutocompleteElement();
+    placeAutocomplete.locationRestriction = map.getBounds();
 
-      const place = places[0];
-      const bounds = new (window as any).google.maps.LatLngBounds();
+    // Insert it into the container
+    const searchContainer = document.getElementById("searchBox");
+    if (searchContainer) {
+      searchContainer.appendChild(placeAutocomplete);
+    }
 
-      if (place.geometry.viewport) {
-        bounds.union(place.geometry.viewport);
-      } else {
-        bounds.extend(place.geometry.location);
-      }
-      map.fitBounds(bounds);
+    const fitSearchResults = async (place: any) => {
+      if (!place || !place.location) return;
+
+      // Use a more gentle zoom approach
+      map.panTo(place.location);
+      map.setZoom(12); // Set a reasonable zoom level instead of fitting bounds
 
       // Draw boundary for the place
       await drawBoundary(map, place);
     };
 
-    searchBox.addListener("places_changed", () => fitSearchResults(searchBox));
+    placeAutocomplete.addEventListener("gmp-select", async (event: any) => {
+      const place = event.placePrediction?.toPlace?.();
+      if (place) {
+        await place.fetchFields({
+          fields: ["location", "formattedAddress", "displayName"],
+        });
+        selectedPlace.value = place;
+        await fitSearchResults(place);
+      }
+    });
+
+    // Update locationRestriction when map bounds change
+    map.addListener("bounds_changed", () => {
+      placeAutocomplete.locationRestriction = map.getBounds();
+    });
 
     const searchBtn = document.getElementById("searchBtn");
     if (searchBtn) {
-      searchBtn.addEventListener("click", () => fitSearchResults(searchBox));
+      searchBtn.addEventListener("click", async () => {
+        const place = placeAutocomplete.value;
+        if (place) {
+          await fitSearchResults(place);
+        }
+      });
     }
 
-    return searchBox;
+    return placeAutocomplete;
   };
 
   return {
-    initSearch
+    initSearch,
+    selectedPlace,
   };
 };

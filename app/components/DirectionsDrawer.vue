@@ -28,6 +28,11 @@
       </p>
 
       <template v-else>
+        <DurationSlider
+          :model-value="maxHours"
+          @update:model-value="emit('updateMaxHours', $event)"
+          @pointerup="emit('recalculate')"
+        />
         <div
           v-for="(direction, index) in directions"
           :key="index"
@@ -83,10 +88,13 @@ import carIcon from "../../app/assets/icons/car.vue";
 
 const props = defineProps<{
   directions: any[];
+  maxHours: number;
 }>();
 
 const emit = defineEmits<{
   close: [];
+  updateMaxHours: [value: number];
+  recalculate: [];
 }>();
 
 // breakpoint "sm" (640px) – adapte si tu utilises un autre seuil

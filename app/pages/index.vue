@@ -2,53 +2,43 @@
   <div :class="['relative w-full h-screen overflow-hidden w-full']">
     <div :class="{ hidden: streetViewVisible }">
       <!-- Search Container -->
-      <div :class="['absolute top-3 left-3 z-5']">
-        <UFieldGroup>
-          <UInput
-            id="searchBox"
-            v-model="searchQuery"
-            placeholder="Chercher un lieu..."
-            icon="i-heroicons-magnifying-glass-20-solid"
-            class="w-[250px]"
-          />
+      <div
+        class="absolute w-full z-10 top-0, left-0 flex p-4 gap-2 items-center"
+      >
+        <div>
+          <UFieldGroup :ui="{}">
+            <div id="searchBox" />
+            <UButton
+              id="directionsBtn"
+              icon="lucide:split"
+              aria-label="Itinéraire"
+              color="neutral"
+              variant="subtle"
+              size="xl"
+              square
+              :ui="{ leadingIcon: 'w-4 h-4' }"
+              @click="handleDirections"
+            />
+          </UFieldGroup>
+        </div>
+        <UDropdownMenu :items="items" class="ml-auto">
           <UButton
-            id="searchBtn"
-            icon="i-heroicons-magnifying-glass-20-solid"
-            aria-label="Rechercher"
+            icon="i-lucide-menu"
             color="neutral"
-            variant="subtle"
-          />
-          <UButton
-            id="directionsBtn"
-            icon="lucide:split"
-            aria-label="Itinéraire"
-            color="neutral"
-            variant="subtle"
-            @click="handleDirections"
+            variant="soft"
             square
-            :ui="{
-              leadingIcon: 'w-4 h-4',
-            }"
+            size="xl"
           />
-        </UFieldGroup>
+        </UDropdownMenu>
       </div>
-      <UDropdownMenu :items="items" class="fixed top-3 right-3 z-10">
-        <UButton icon="i-lucide-menu" color="neutral" variant="outline" />
-      </UDropdownMenu>
 
-      <div :class="['absolute bottom-6 left-0 px-3 z-5 w-full']">
-        <USlider
-          v-model="maxHours"
-          :min="1"
-          :max="15"
-          :step="1 / 12"
-          class="w-full"
-          color="gray"
-          :tooltip="{
-            open: true,
-            text: displayHours,
-          }"
-          size="xl"
+      <div
+        v-if="!directionsPanel.open"
+        :class="['absolute bottom-6 left-0 px-3 z-5 w-full']"
+      >
+        <DurationSlider
+          :model-value="maxHours"
+          @update:model-value="maxHours = $event"
         />
       </div>
     </div>
@@ -58,17 +48,20 @@
     <div id="map" class="w-full h-full" />
 
     <!-- POI Details Drawer -->
-    <PoiDetailsDrawer
+    <!-- <PoiDetailsDrawer
       :open="panel.open"
       :poi="panel.poi"
       @close="panel.open = false"
-    />
+    /> -->
 
     <!-- Directions Drawer -->
     <DirectionsDrawer
+      :max-hours="maxHours"
       :open="directionsPanel.open"
       :directions="directionsPanel.directions"
       @close="directionsPanel.open = false"
+      @update-max-hours="maxHours = $event"
+      @recalculate="handleDirections"
     />
   </div>
 </template>
@@ -85,8 +78,8 @@ import { usePoiDetails } from "~/composables/usePoiDetails";
 import { createMaps } from "~/utils/maps";
 
 const { getPois } = usePois();
-const { initSearch } = useSearch();
-const { initDirections } = useDirections();
+const { initSearch, selectedPlace } = useSearch();
+const { initDirections, clearDirections } = useDirections();
 const { loadGoogleMaps } = useGoogleMaps();
 const { enrichPoiData } = usePoiDetails();
 
@@ -103,14 +96,6 @@ const getHex = (color: string, shade = 500) => {
 
 const maxHours = ref(5);
 
-const displayHours = computed(() => {
-  const h = Math.floor(maxHours.value);
-  const m = Math.round((maxHours.value - h) * 60);
-
-  return `${h}h ${m ? m + "min" : ""}`;
-});
-
-const searchQuery = ref("");
 const panel = reactive({
   open: false,
   poi: null,
@@ -142,32 +127,35 @@ const createMap = (): any => {
     zoom: 5,
     center: { lat: 46.5, lng: 2.5 },
     disableDefaultUI: true,
+    mapId: "DEMO_MAP_ID",
   });
 };
 
-const displayPois = (poisData: any[]) => {
+const displayPois = async (poisData: any[]) => {
   // Clear all previous markers
-  markers.forEach((marker) => marker.setMap(null));
+  markers.forEach((marker) => (marker.map = null));
   markers = [];
+
+  const { AdvancedMarkerElement, PinElement } = (await (
+    window as any
+  ).google.maps.importLibrary("marker")) as any;
 
   // Add new markers
   poisData.forEach((poi: any) => {
-    const marker = new (window as any).google.maps.Marker({
+    const pinElement = new PinElement({
+      background: getHex(poi.map.color, 500),
+      borderColor: getHex(poi.map.color, 700),
+      glyphColor: "white",
+    });
+
+    const marker = new AdvancedMarkerElement({
       position: poi.position,
       map,
       title: poi.name,
-      icon: {
-        path: `M6.99805 0C7.73296 0 8.44304 0.116279 9.11426 0.324219H9.11523C10.8849 0.882051 12.3567 2.14003 13.209 3.77344L13.207 3.77539L13.21 3.77344C13.7142 4.74583 14.0107 5.84765 14.0107 7.02734C14.0107 11.2918 11.2868 12.9649 8.9502 16.6338C7.52989 18.8385 7.92983 20.16 7.0127 20.1602C6.10799 20.1602 6.53455 18.8384 5.11328 16.6338C4.71282 16.0118 4.31242 15.4406 3.89941 14.9092V14.9102C2.64671 13.2894 1.43316 11.9927 0.697266 10.3857V10.3848L0.541016 10.0195C0.197387 9.15311 0 8.18396 0 7.02734C4.85639e-05 5.31612 0.619682 3.73434 1.63965 2.51562L1.88867 2.23242C3.17068 0.854486 4.97665 3.74942e-05 6.99805 0ZM6.99902 4.33008C6.172 4.33008 5.43592 4.70518 4.94531 5.30176L4.94629 5.30273L4.94434 5.30469C4.58274 5.75821 4.32526 6.39273 4.3252 7.02832C4.3252 8.50589 5.51262 9.71182 6.99805 9.71191C7.72195 9.71191 8.37179 9.42378 8.85156 8.96094L9.04395 8.75488L9.05176 8.74512L9.0459 8.75098C9.43372 8.28367 9.67072 7.67449 9.67188 7.01367C9.67188 5.53606 8.48454 4.33008 6.99902 4.33008Z`,
-        fillColor: getHex(poi.map.color, 500),
-        fillOpacity: 1,
-        strokeWeight: 1,
-        strokeColor: getHex(poi.map.color, 700),
-        scale: 1,
-        anchor: new google.maps.Point(7, 20),
-      },
+      content: pinElement,
     });
 
-    marker.addListener("click", async () => {
+    marker.addEventListener("gmp-click", async () => {
       const enrichedPoi = await enrichPoiData(poi);
       panel.poi = enrichedPoi;
       console.log(enrichedPoi);
@@ -183,36 +171,38 @@ const displayPois = (poisData: any[]) => {
 };
 
 const handleDirections = async () => {
-  const places = searchBox?.getPlaces();
-  if (!places || places.length === 0) {
+  const place = selectedPlace.value;
+  if (!place) {
     console.warn("Please search for a location first");
     return;
   }
 
   // Remove previous origin marker if it exists
   if (originMarker) {
-    originMarker.setMap(null);
+    originMarker.map = null;
   }
 
   // Add new origin marker at the search location
-  const originLocation = places[0].geometry?.location;
+  const { AdvancedMarkerElement, PinElement } = (await (
+    window as any
+  ).google.maps.importLibrary("marker")) as any;
+
+  const originLocation = place.location;
   if (originLocation) {
-    originMarker = new (window as any).google.maps.Marker({
+    const pinElement = new PinElement({
+      background: "white",
+      borderColor: "black",
+    });
+
+    originMarker = new AdvancedMarkerElement({
       position: originLocation,
       map,
       title: "Point de départ",
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        fillColor: "white",
-        fillOpacity: 1,
-        strokeColor: "black",
-        strokeWeight: 2,
-        scale: 5,
-      },
+      content: pinElement,
     });
   }
 
-  const origin = places[0].formatted_address || places[0].name;
+  const origin = place.formattedAddress || place.displayName;
   const results = await initDirections(map, pois, origin, maxHours.value);
 
   if (results.length > 0) {
@@ -239,7 +229,7 @@ async function refreshPois() {
         return data.map((poi: any) => ({ ...poi, map }));
       }),
   ).then((results) => results.flat());
-  displayPois(pois);
+  await displayPois(pois);
 }
 
 // create the maps array once refreshPois is defined
@@ -270,9 +260,9 @@ onMounted(async () => {
   });
 
   // Initialize search
-  searchBox = initSearch(map);
+  searchBox = await initSearch(map);
 
   // Load and display POIs
-  refreshPois();
+  await refreshPois();
 });
 </script>
