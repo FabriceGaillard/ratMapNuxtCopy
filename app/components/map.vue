@@ -43,6 +43,7 @@ async function createMap() {
     renderingType: $mapsLibrary.RenderingType.VECTOR,
     mapId: config.public.googleMapId,
     disableDefaultUI: true,
+    gestureHandling: "greedy",
     colorScheme:
       colorMode.value === "dark"
         ? $coreLibrary.ColorScheme.DARK
