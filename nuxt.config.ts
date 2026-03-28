@@ -37,6 +37,7 @@ export default defineNuxtConfig({
         "@vue/devtools-kit",
         "@googlemaps/js-api-loader",
         "reka-ui",
+        "decode-google-map-polyline",
       ],
     },
   },
