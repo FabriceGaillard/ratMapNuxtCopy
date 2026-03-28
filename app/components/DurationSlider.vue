@@ -22,11 +22,16 @@ const displayHours = computed(() => {
     :step="1 / 12"
     class="w-full"
     color="gray"
+    size="xl"
     :tooltip="{
       open: true,
+      content: {
+        side: 'right',
+        collisionPadding: 50,
+        updatePositionStrategy: 'always',
+      },
       text: displayHours,
     }"
-    size="xl"
     @pointerdown.stop.prevent
     @touchstart.stop.prevent
     @update:model-value="$emit('update:modelValue', $event!)"

@@ -1,8 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@nuxt/eslint", "@nuxt/ui", "@nuxtjs/color-mode"],
-
-  ssr: false,
+  modules: ["@nuxt/eslint", "@nuxt/ui"],
 
   devtools: {
     enabled: true,
@@ -10,27 +8,36 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
-  colorMode: {
-    preference: "light",
-    fallback: "light",
-    classSuffix: "",
-  },
-
-  runtimeConfig: {
-    public: {
-      googleMapsKey: "LEAKED_KEY_REMOVED",
-    },
-  },
-
   routeRules: {
-    "/": { prerender: false },
+    "/": { prerender: true },
   },
 
   compatibilityDate: "2025-01-15",
 
   eslint: {
     config: {
-      stylistic: false,
+      stylistic: {
+        commaDangle: "never",
+        braceStyle: "1tbs",
+      },
+    },
+  },
+
+  runtimeConfig: {
+    public: {
+      googleMapsApiKey: "",
+      googleMapId: "",
+    },
+  },
+
+  vite: {
+    optimizeDeps: {
+      include: [
+        "@vue/devtools-core",
+        "@vue/devtools-kit",
+        "@googlemaps/js-api-loader",
+        "reka-ui",
+      ],
     },
   },
 });

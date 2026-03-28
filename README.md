@@ -11,7 +11,7 @@ Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-dark.png">
     <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
+    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png" width="830" height="466">
   </picture>
 </a>
 
@@ -20,7 +20,7 @@ Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
 ## Quick Start
 
 ```bash [Terminal]
-npm create nuxt@latest -- -t github:nuxt-ui-templates/starter
+npm create nuxt@latest -- -t ui
 ```
 
 ## Deploy your own

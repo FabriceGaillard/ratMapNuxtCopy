@@ -2,36 +2,22 @@
 @import "@nuxt/ui";
 
 @theme static {
-  --font-sans: 'Public Sans', sans-serif;
+  --font-sans: "Public Sans", sans-serif;
 
-  --color-green-50: #EFFDF5;
-  --color-green-100: #D9FBE8;
-  --color-green-200: #B3F5D1;
-  --color-green-300: #75EDAE;
-  --color-green-400: #00DC82;
-  --color-green-500: #00C16A;
-  --color-green-600: #00A155;
-  --color-green-700: #007F45;
-  --color-green-800: #016538;
-  --color-green-900: #0A5331;
-  --color-green-950: #052E16;
+  /* Palette brand */
+  --color-brand-50: #f0fbff;
+  --color-brand-100: #d9f6ff;
+  --color-brand-200: #b3eeff;
+  --color-brand-300: #80e4ff;
+  --color-brand-400: #4dd9ff;
+  --color-brand-500: #9de4f8;
+  --color-brand-600: #71c9e6;
+  --color-brand-700: #539fbf;
+  --color-brand-800: #376f85;
+  --color-brand-900: #1e4a57;
+  --color-brand-950: #0f2d36;
 }
 
-/* Google Maps InfoWindow Styles */
-.gm-style-iw-d {
-  background: white;
-  padding: 4px 8px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #000;
-  white-space: nowrap;
-  overflow: hidden !important;
-}
-
-.gm-style-iw-chr {
-  display: none !important;
-}
-
-.gm-style-iw {
-  padding: 0 !important;
+.btn-square {
+  @apply w-12 h-12 p-0 flex items-center justify-center rounded-2xl;
 }
