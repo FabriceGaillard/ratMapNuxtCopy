@@ -58,7 +58,6 @@ watch(
         >
           <template #body>
             <UButton
-              :avatar="{ icon: 'material-symbols:location-on', size: 'md' }"
               :label="layer.label"
               color="neutral"
               variant="ghost"
@@ -72,8 +71,8 @@ watch(
                   class="bg-gray-200 flex items-center justify-center rounded-full w-6.5 h-6.5"
                 >
                   <UIcon
-                    name="material-symbols:location-on bg-gray-500"
-                    class="p-0"
+                    name="material-symbols:location-on text-gray-600"
+                    class="w-4 h-4"
                     size="md"
                     :ui="{
                       base: `${colorMap[layer.color]}`,
