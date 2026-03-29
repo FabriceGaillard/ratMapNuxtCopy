@@ -15,6 +15,7 @@
     "@iconify-json/lucide": "^1.2.100",
     "@iconify-json/simple-icons": "^1.2.75",
     "@nuxt/ui": "^4.6.0",
+    "@vite-pwa/nuxt": "^0.10.1",
     "decode-google-map-polyline": "^1.0.1",
     "nuxt": "^4.4.2",
     "nuxt-security": "2.5.1",
