@@ -36,6 +36,13 @@ export default defineAppConfig({
       slots: {
         base: "rounded-full",
       },
+      variants: {
+        color: {
+          primary: {
+            base: "!text-black",
+          },
+        },
+      },
     },
   },
 });

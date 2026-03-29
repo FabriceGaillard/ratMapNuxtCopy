@@ -18,6 +18,8 @@ useHead({
       content: "black-translucent",
     },
     { name: "apple-mobile-web-app-title", content: "RatMap" },
+    { name: "theme-color", content: "transparent" },
+    { name: "color-scheme", content: "dark" },
   ],
   link: [
     { rel: "manifest", href: "/manifest.json" },

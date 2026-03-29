@@ -134,9 +134,19 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
       <MapMarkers :map="map" :markers="markers" />
     </Map>
 
+    <div class="p-4 absolute bottom-5 left-0 z-10">
+      <UColorModeButton
+        size="sm"
+        variant="soft"
+        class="w-10 h-10 rounded-xl p-2.5"
+        :ui="{
+          leadingIcon: 'w-full h-full',
+        }"
+      />
+    </div>
+
     <div class="p-4 absolute bottom-5 right-0 z-10 flex">
       <div class="ml-auto flex-col flex gap-3">
-        <!-- <UColorModeButton size="sm" class="btn-square" variant="soft" /> -->
         <ListsDrawer />
         <ItineraryModal
           @select="

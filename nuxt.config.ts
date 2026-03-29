@@ -40,7 +40,7 @@ export default defineNuxtConfig({
       name: "RatMap",
       short_name: "RatMap",
       description: "Une carte collaborative des associations de rats.",
-      theme_color: "#1a1a1a",
+      theme_color: "transparent",
       background_color: "#000000",
       display: "standalone",
       scope: "/",
