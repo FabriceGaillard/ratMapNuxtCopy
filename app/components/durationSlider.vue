@@ -13,6 +13,8 @@ const displayHours = computed(() => {
 
   return `${h}h ${m ? m + "min" : ""}`;
 });
+
+const open = ref(false);
 </script>
 <template>
   <USlider
@@ -24,16 +26,20 @@ const displayHours = computed(() => {
     color="gray"
     size="xl"
     :tooltip="{
-      open: true,
+      open: open,
       content: {
-        side: 'right',
-        collisionPadding: 50,
+        side: 'bottom',
         updatePositionStrategy: 'always',
+        class: 'z-50',
       },
       text: displayHours,
     }"
-    @pointerdown.stop.prevent
-    @touchstart.stop.prevent
+    @focus="open = true"
+    @blur="open = false"
+    @pointerdown.stop.prevent="open = true"
+    @touchstart.stop.prevent="open = true"
+    @touchend.stop.prevent="open = false"
+    @pointerup.stop.prevent="open = false"
     @update:model-value="$emit('update:modelValue', $event!)"
   />
 </template>

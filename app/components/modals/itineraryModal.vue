@@ -13,7 +13,7 @@ const open = ref(false);
     v-model:open="open"
     :ui="{
       content:
-        'z-10 data-[state=open]:animate-[fade-in_150ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
+        'overflow-visible z-10 data-[state=open]:animate-[fade-in_150ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
     }"
   >
     <ItineraryButton @click="open = true" />
