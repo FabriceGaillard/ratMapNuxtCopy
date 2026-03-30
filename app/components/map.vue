@@ -41,7 +41,7 @@ async function createMap() {
     zoom,
     center,
     renderingType: $mapsLibrary.RenderingType.VECTOR,
-    mapId: config.public.googleMapId,
+    // mapId: config.public.googleMapId,
     disableDefaultUI: true,
     gestureHandling: "greedy",
     colorScheme:
