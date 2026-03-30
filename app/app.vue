@@ -18,7 +18,7 @@ useHead({
     { name: "color-scheme", content: "dark" },
   ],
   link: [
-    { rel: "manifest", href: "/manifest.json" },
+    { rel: "manifest", href: "/manifest.webmanifest" },
     { rel: "icon", href: "/favicon.ico" },
     { rel: "apple-touch-icon", href: "/pwa-192x192.png" },
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
