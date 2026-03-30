@@ -1,8 +1,4 @@
 <script setup lang="ts">
-definePageMeta({
-  middleware: ["mobile-check"],
-});
-
 useHead({
   meta: [
     { charset: "utf-8" },
@@ -17,7 +13,7 @@ useHead({
       name: "apple-mobile-web-app-status-bar-style",
       content: "black-translucent",
     },
-    { name: "apple-mobile-web-app-title", content: "BoggleRat" },
+    { name: "apple-mobile-web-app-title", content: "BoggleMaps" },
     { name: "theme-color", content: "transparent" },
     { name: "color-scheme", content: "dark" },
   ],

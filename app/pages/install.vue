@@ -41,7 +41,7 @@ if (status.value === "installed") {
         v-if="status === 'unavailable'"
         class="max-w-xs text-center text-muted"
       >
-        L'installation n'est pas disponible sur cet appareil.
+        L'installation n'est disponible que sur mobile.
       </p>
     </div>
   </main>

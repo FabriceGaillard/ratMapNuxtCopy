@@ -19,7 +19,7 @@ let centerListener: any = null;
 let clickListener: any = null;
 
 // 👉 NEW
-let featureLayer: any = null;
+// let featureLayer: any = null;
 
 function deleteMap() {
   if (zoomListener) zoomListener.remove();
@@ -51,9 +51,9 @@ async function createMap() {
   });
 
   // 👉 NEW: récupération du layer des boundaries
-  featureLayer = map.value.getFeatureLayer(
-    $mapsLibrary.FeatureType.ADMINISTRATIVE_AREA_LEVEL_1,
-  );
+  // featureLayer = map.value.getFeatureLayer(
+  //   $mapsLibrary.FeatureType.ADMINISTRATIVE_AREA_LEVEL_1,
+  // );
 
   zoomListener = map.value.addListener("zoom_changed", () => {
     zoom = map.value.getZoom();
