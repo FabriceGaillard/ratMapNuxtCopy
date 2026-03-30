@@ -1,24 +1,10 @@
 <script setup lang="ts">
-import LoadingSpinner from "~/components/loadingSpinner.vue";
-import { useRouter } from "vue-router";
-import { usePwaInstallPrompt } from "@/composables/usePwaInstallPrompt";
-
-const { status, triggerPrompt } = usePwaInstallPrompt();
-
 const router = useRouter();
+const { status, triggerPrompt } = usePwaInstallPrompt();
 
 onMounted(() => {
   const isInstalled = window.matchMedia("(display-mode: standalone)").matches;
-
-  if (isInstalled) {
-    router.push("/");
-  }
-
-  window.addEventListener("beforeinstallprompt", (event: Event) => {
-    event.preventDefault();
-    deferredPrompt.value = event as BeforeInstallPromptEvent;
-    status.value = "readyToInstall";
-  });
+  if (isInstalled) router.push("/");
 });
 </script>
 
@@ -51,7 +37,7 @@ onMounted(() => {
         v-if="status === 'unavailable'"
         class="max-w-xs text-center text-muted"
       >
-        L'installation n'est disponible que sur mobile.
+        L'installation n'est pas disponible sur cet appareil.
       </p>
     </div>
   </main>

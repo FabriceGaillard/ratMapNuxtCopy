@@ -1,5 +1,3 @@
-import { deferredPrompt, status } from "@/composables/usePwaInstallPrompt";
-
 export default defineNuxtRouteMiddleware((to, from) => {
   if (import.meta.server) {
     return;

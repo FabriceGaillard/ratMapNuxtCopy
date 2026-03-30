@@ -15,12 +15,12 @@ const itinerary = app.itinerary;
       />
       <USeparator orientation="vertical" class="h-4 border-red-500" size="sm" />
       <UIcon
-        name="material-symbols:auto-timer-outline-rounded"
+        name="material-symbols:timer-outline-rounded"
         class="shrink-0 w-5 h-5 m-2"
       />
     </div>
 
-    <div class="grow">
+    <div class="grow min-w-0">
       <SearchModal
         :formattedAddress="app.place?.formattedAddress"
         placeholder="Choisir un lieu de départ"
@@ -32,7 +32,7 @@ const itinerary = app.itinerary;
           "
           variant="outline"
           color="neutral"
-          class="w-full text-muted"
+          class="w-full overflow-hidden text-ellipsis whitespace-nowrap"
           size="lg"
           @pointerdown.stop
           @touchstart.stop
