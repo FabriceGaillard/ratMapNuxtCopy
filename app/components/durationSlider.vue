@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, computed } from "vue";
+
 const props = defineProps<{
   modelValue: number;
 }>();
@@ -10,12 +12,27 @@ const emit = defineEmits<{
 const displayHours = computed(() => {
   const h = Math.floor(props.modelValue);
   const m = Math.round((props.modelValue - h) * 60);
-
-  return `${h}h ${m ? m + "min" : ""}`;
+  return `${h}h${m ? " " + m + "min" : ""}`;
 });
 
+// contrôle du tooltip avec delay
 const open = ref(false);
+let closeTimeout: number | undefined;
+
+// ouverture immédiate
+const showTooltip = () => {
+  if (closeTimeout) clearTimeout(closeTimeout);
+  open.value = true;
+};
+
+// fermeture avec delay (ex: 500ms)
+const hideTooltip = () => {
+  closeTimeout = window.setTimeout(() => {
+    open.value = false;
+  }, 500);
+};
 </script>
+
 <template>
   <USlider
     :model-value="modelValue"
@@ -34,12 +51,14 @@ const open = ref(false);
       },
       text: displayHours,
     }"
-    @focus="open = true"
-    @blur="open = false"
-    @pointerdown.stop.prevent="open = true"
-    @touchstart.stop.prevent="open = true"
-    @touchend.stop.prevent="open = false"
-    @pointerup.stop.prevent="open = false"
+    @focus="showTooltip"
+    @blur="hideTooltip"
+    @pointerdown.stop.prevent="showTooltip"
+    @pointerup.stop.prevent="hideTooltip"
+    @touchstart.stop.prevent="showTooltip"
+    @touchend.stop.prevent="hideTooltip"
     @update:model-value="$emit('update:modelValue', $event!)"
+    @mouseenter="showTooltip"
+    @mouseleave="hideTooltip"
   />
 </template>

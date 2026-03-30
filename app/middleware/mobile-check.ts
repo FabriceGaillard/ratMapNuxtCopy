@@ -5,6 +5,12 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return;
   }
 
+  const config = useRuntimeConfig();
+
+  if (config.public.nodeEnv === "development") {
+    return;
+  }
+
   const userAgent =
     navigator.userAgent || navigator.vendor || (window as any).opera;
 

@@ -32,6 +32,7 @@ export default defineNuxtConfig({
     public: {
       googleMapsApiKey: "",
       googleMapId: "",
+      nodeEnv: "",
     },
   },
 
