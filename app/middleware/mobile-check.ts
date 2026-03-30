@@ -1,3 +1,5 @@
+import { deferredPrompt, status } from "@/composables/usePwaInstallPrompt";
+
 export default defineNuxtRouteMiddleware((to, from) => {
   if (import.meta.server) {
     return;
@@ -11,9 +13,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
       userAgent,
     ) && window.matchMedia("(max-width: 768px)").matches;
 
-  console.log({ isMobile });
+  const isInstalled = window.matchMedia("(display-mode: standalone)").matches;
 
-  if (!isMobile) {
+  if (!isMobile || !isInstalled) {
     return navigateTo("/install");
   }
 });

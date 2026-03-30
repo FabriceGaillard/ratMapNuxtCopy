@@ -7,9 +7,19 @@ const { status, triggerPrompt } = usePwaInstallPrompt();
 
 const router = useRouter();
 
-if (status.value === "installed") {
-  router.push("/");
-}
+onMounted(() => {
+  const isInstalled = window.matchMedia("(display-mode: standalone)").matches;
+
+  if (isInstalled) {
+    router.push("/");
+  }
+
+  window.addEventListener("beforeinstallprompt", (event: Event) => {
+    event.preventDefault();
+    deferredPrompt.value = event as BeforeInstallPromptEvent;
+    status.value = "readyToInstall";
+  });
+});
 </script>
 
 <template>
