@@ -37,8 +37,8 @@ export default defineNuxtConfig({
 
   pwa: {
     manifest: {
-      name: "RatMap",
-      short_name: "RatMap",
+      name: "BoggleRat",
+      short_name: "BoggleRat",
       description: "Une carte collaborative des associations de rats.",
       theme_color: "transparent",
       background_color: "#000000",

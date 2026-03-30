@@ -1,5 +1,5 @@
 {
-  "name": "test-maps",
+  "name": "boggle-rat",
   "private": true,
   "type": "module",
   "scripts": {
