@@ -47,40 +47,6 @@ const open = ref(false);
             />
           </div>
         </div>
-        <!-- <div class="overflow-y-auto grow">
-          <p v-if="routes.length === 0" class="text-sm text-slate-500">
-            Aucun itinéraire trouvé pour cette recherche.
-          </p>
-
-          <template v-else>
-            <div
-              v-for="(route, index) in routes"
-              :key="index"
-              class="border-b border-gray-300 py-3"
-            >
-              <UBadge size="xs" color="neutral" variant="soft">
-                {{ route.layer.label }}
-              </UBadge>
-              <div class="flex items-center min-w-0">
-                <div class="text-md font-semibold truncate">
-                  {{ route.marker.properties?.name }}
-                </div>
-
-                <UBadge
-                  variant="soft"
-                  size="md"
-                  color="neutral"
-                  class="ml-auto font-bold shrink-0"
-                >
-                  {{ formatDuration(route.seconds) }}
-                </UBadge>
-              </div>
-              <p class="text-sm text-slate-500">
-                {{ route.formated_address }}
-              </p>
-            </div>
-          </template>
-        </div> -->
       </div>
     </template>
   </UModal>

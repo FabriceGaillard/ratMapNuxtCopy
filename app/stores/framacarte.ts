@@ -7,8 +7,8 @@ export const layers = reactive([
     description: "Description",
     id: "221549",
     color: "green",
+    icon: "/icons/heart.svg",
     checked: true,
-    // icon: "material-symbols:location-on",
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },
   {
@@ -16,8 +16,8 @@ export const layers = reactive([
     description: "Description",
     id: "221570",
     color: "red",
+    icon: "/icons/pig.svg",
     checked: false,
-    // icon: "material-symbols:location-on",
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },
   {
@@ -25,8 +25,8 @@ export const layers = reactive([
     description: "Description",
     id: "221571",
     color: "blue",
+    icon: "/icons/pin.svg",
     checked: false,
-    // icon: "material-symbols:location-on",
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },
   {
@@ -34,8 +34,27 @@ export const layers = reactive([
     description: "Description",
     id: "221574",
     color: "yellow",
+    icon: "/icons/rat.svg",
     checked: false,
-    // icon: "material-symbols:location-on",
+    markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
+  },
+
+  {
+    label: "Élevages",
+    description: "Description",
+    id: "228024",
+    color: "purple",
+    icon: "/icons/pig.svg",
+    checked: false,
+    markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
+  },
+  {
+    label: "Élevages Potentiels",
+    description: "Description",
+    id: "230084",
+    color: "purple",
+    icon: "/icons/wave.svg",
+    checked: false,
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },
 ]);
@@ -45,7 +64,9 @@ export const checkedLayers = computed(() =>
 );
 
 export const markers = computed(() =>
-  checkedLayers.value.flatMap((layer) => layer.markers),
+  checkedLayers.value.flatMap((layer) =>
+    layer.markers.map((m) => ({ ...m, color: layer.color, icon: layer.icon })),
+  ),
 );
 
 async function setMarker(layer: (typeof layers)[number]) {

@@ -41,7 +41,7 @@ async function createMap() {
     zoom,
     center,
     renderingType: $mapsLibrary.RenderingType.VECTOR,
-    // mapId: config.public.googleMapId,
+    mapId: config.public.googleMapId,
     disableDefaultUI: true,
     gestureHandling: "greedy",
     colorScheme:
@@ -49,11 +49,6 @@ async function createMap() {
         ? $coreLibrary.ColorScheme.DARK
         : $coreLibrary.ColorScheme.LIGHT,
   });
-
-  // 👉 NEW: récupération du layer des boundaries
-  // featureLayer = map.value.getFeatureLayer(
-  //   $mapsLibrary.FeatureType.ADMINISTRATIVE_AREA_LEVEL_1,
-  // );
 
   zoomListener = map.value.addListener("zoom_changed", () => {
     zoom = map.value.getZoom();
