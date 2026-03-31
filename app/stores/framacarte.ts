@@ -34,7 +34,7 @@ export const layers = reactive([
     description: "Description",
     id: "221574",
     color: "yellow",
-    icon: "/icons/rat.svg",
+    icon: "/icons/family_home.svg",
     checked: false,
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },
