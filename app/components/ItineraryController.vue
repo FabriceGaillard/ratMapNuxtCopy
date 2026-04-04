@@ -7,20 +7,14 @@ const itinerary = app.itinerary;
 </script>
 
 <template>
-  <div class="flex w-full gap-2">
-    <div class="flex flex-col">
+  <div class="w-full space-y-5">
+    <div class="flex items-center w-full gap-2">
+
       <UIcon
         name="material-symbols:my-location-outline-rounded"
-        class="shrink-0 w-5 h-5 m-2"
+        class="shrink-0 w-5 h-5"
       />
-      <USeparator orientation="vertical" class="h-4 border-red-500" size="sm" />
-      <UIcon
-        name="material-symbols:timer-outline-rounded"
-        class="shrink-0 w-5 h-5 m-2"
-      />
-    </div>
 
-    <div class="grow min-w-0">
       <SearchModal
         :formattedAddress="app.place?.formattedAddress"
         placeholder="Choisir un lieu de départ"
@@ -38,15 +32,21 @@ const itinerary = app.itinerary;
           @touchstart.stop
         />
       </SearchModal>
-      <!-- <USeparator class="h-4 p-1" /> -->
-      <div class="h-4"></div>
+    </div>
 
-      <div class="p-3">
+    <div class="flex items-center w-full gap-2">
+
+     <UIcon
+        name="lucide:clock"
+        class="shrink-0 w-4.5 h-4.5 pl-5 d-block"
+      />
+
         <DurationSlider
           v-model="itinerary.limits.hours"
           @change="$emit('set-routes')"
+          class="px-1"
         />
-      </div>
     </div>
   </div>
+
 </template>
