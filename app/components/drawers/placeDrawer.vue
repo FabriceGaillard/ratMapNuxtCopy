@@ -8,9 +8,11 @@ defineProps<{
 </script>
 
 <template>
-  <UDrawer :modal="false" :dismissible="false" direction="bottom">
-    <template #header>
-      <div class="flex items-center gap-2 w-full">
+  <UDrawer :modal="false" :dismissible="false" direction="bottom" :ui="{
+    content:'!d-block px-3 pt-3 '
+  }">
+    <template #content>
+      <div class="flex items-center gap-2 w-full pb-1">
         <DialogTitle class="text-xl font-semibold">
           {{ place ? place.formattedAddress : "Points d'intérets" }}
         </DialogTitle>
@@ -21,14 +23,15 @@ defineProps<{
 
         <CloseButton @click="$emit('close-drawer')" />
       </div>
-    </template>
-    <template #body>
+      <div>
+
       <UButton
         icon="material-symbols:directions-rounded"
         label="itinéraire"
         @click="$emit('select')"
         class="text-normal font-normal"
       />
+      </div>
     </template>
   </UDrawer>
 </template>

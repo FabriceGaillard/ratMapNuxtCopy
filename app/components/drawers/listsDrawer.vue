@@ -19,17 +19,16 @@ watch(
     :modal="false"
     :open="open"
     direction="bottom"
-    fullscreen
     :ui="{
-      header: 'sticky top-0 left-0 flex px-3 pt-3 pb-1',
-      content: 'w-screen h-[45%] m-0',
+      content: 'w-screen max-h-[100%] m-0',
       container: '!p-0',
     }"
+    :snap-points="[0.4, 1]"
     @close="open = false"
   >
     <ListButton @click="open = true" />
-    <template #header>
-      <div class="flex items-center gap-2 w-full">
+    <template #content>
+      <div class="flex items-center gap-2 w-full px-3 pt-3 pb-1 ">
         <UIcon
           name="material-symbols:location-on-outline-rounded"
           class="w-5 h-5 ml-1.5"
@@ -44,8 +43,6 @@ watch(
 
         <CloseButton @click="open = false" />
       </div>
-    </template>
-    <template #body>
       <UPageList divide class="bg-muted p-4 p-0">
         <UPageCard
           v-for="layer in layers"
@@ -63,8 +60,6 @@ watch(
               variant="ghost"
               class="w-full p-3 px-4 rounded-none"
               @click.stop="layer.checked = !layer.checked"
-              @pointerdown.stop
-              @touchstart.stop
             >
               <template #leading>
                 <div

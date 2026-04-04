@@ -16,11 +16,11 @@ defineProps<{
     route="bottom"
     :snapPoints="['230px', 1]"
     :ui="{
-      content: 'z-30 max-h-none',
+      content: 'z-30 max-h-none px-3 pt-3 pb-1',
       body: 'overflow-y-auto',
     }"
   >
-    <template #header>
+    <template #content>
       <div class="flex items-center gap-2 w-full">
         <DialogTitle class="text-lg font-semibold flex items-center gap-2">
           <UIcon name="material-symbols:my-location-rounded" class="w-5 h-5" />
@@ -32,8 +32,7 @@ defineProps<{
         </DialogDescription>
         <CloseButton @close="$emit('close')" />
       </div>
-    </template>
-    <template #body>
+
       <span v-if="!routes.length" class="text-dimmed text-sm">
         Aucun itinéraire disponible
       </span>
