@@ -8,6 +8,9 @@ const { map, routes } = defineProps<{
   routes: Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>>[];
 }>();
 
+const colorMode = useColorMode();
+
+
 const { $mapsLibrary, $markersLibrary } = useNuxtApp();
 
 let routeInstances: {
@@ -85,7 +88,7 @@ function createRoutes() {
   });
 }
 
-watch(() => routes, createRoutes, { deep: true, immediate: true });
+watch(() => [routes, colorMode], createRoutes, { deep: true, immediate: true });
 onUnmounted(destroyRoutes);
 onMounted(createRoutes);
 </script>

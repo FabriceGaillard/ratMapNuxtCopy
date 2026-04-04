@@ -8,6 +8,7 @@ const { map, markers } = defineProps<{
   markers: any[];
 }>();
 
+const colorMode = useColorMode();
 const { $markersLibrary } = useNuxtApp();
 let markerInstances: any[] = [];
 
@@ -65,7 +66,7 @@ async function createMarkers() {
   }
 }
 
-watch(() => markers, createMarkers, { deep: true, immediate: true });
+watch(() => [markers, colorMode], createMarkers, { deep: true, immediate: true });
 onUnmounted(destroyMarkers);
 onMounted(createMarkers);
 </script>
