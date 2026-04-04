@@ -20,8 +20,7 @@ watch(
     :open="open"
     direction="bottom"
     :ui="{
-      content: 'w-screen max-h-[100%] m-0',
-      container: '!p-0',
+      content: 'w-screen max-h-none',
     }"
     :snap-points="[0.4, 1]"
     @close="open = false"

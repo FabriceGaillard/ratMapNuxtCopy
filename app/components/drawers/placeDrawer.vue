@@ -9,7 +9,7 @@ defineProps<{
 
 <template>
   <UDrawer :modal="false" :dismissible="false" direction="bottom" :ui="{
-    content:'!d-block px-3 pt-3 '
+    content:'!d-block p-3 pt-3 '
   }">
     <template #content>
       <div class="flex items-center gap-2 w-full pb-1">

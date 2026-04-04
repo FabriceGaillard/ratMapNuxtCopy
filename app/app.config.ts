@@ -27,8 +27,7 @@ export default defineAppConfig({
     },
     drawer: {
       slots: {
-        content: "!rounded-t-[1.5rem] ring-transparent ",
-        handle: "!mt-2 !h-1",
+        content: "!rounded-t-[1.5rem] ring-transparent",
         container: "!py-2 ",
       },
     },
