@@ -10,15 +10,15 @@ import ItineraryModal from "~/components/modals/itineraryModal.vue";
 import PlaceDrawer from "~/components/drawers/placeDrawer.vue";
 import app from "~/stores/app";
 import ItineraryDrawer from "~/components/drawers/itineraryDrawer.vue";
-
-const routes = ref(
-  [] as Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>>[],
-);
+import ItineraryButton from "~/components/buttons/itineraryButton.vue";
 
 definePageMeta({
   middleware: ["mobile-check"], // exact match en kebab-case
 });
-console.log("INDEX MOUNTED");
+
+const routes = ref(
+  [] as Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>>[],
+);
 
 const itinerary = app.itinerary;
 
@@ -154,7 +154,10 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
       <div class="p-4 absolute bottom-5 right-0 z-10 flex">
         <div class="ml-auto flex-col flex gap-3">
           <ListsDrawer />
-          <ItineraryModal
+
+          <SearchModal
+            :formatted-address="app.place?.formattedAddress ?? ''"
+            placeholder="Choisir un lieu de départ"
             @select="
               {
                 app.place = $event;
@@ -162,7 +165,13 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
                 setRoutes();
               }
             "
-          />
+          >
+            <ItineraryButton />
+          </SearchModal>
+
+
+
+
         </div>
       </div>
 

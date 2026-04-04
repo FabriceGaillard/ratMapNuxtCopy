@@ -5,6 +5,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   const config = useRuntimeConfig();
 
+
   if (config.public.nodeEnv === "development") {
     return;
   }
