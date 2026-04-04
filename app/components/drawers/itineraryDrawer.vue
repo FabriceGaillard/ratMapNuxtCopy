@@ -4,9 +4,15 @@ import { formatDuration } from "~/helpers/duration";
 import { colorMap } from "~/utils/colors";
 import CloseButton from "../buttons/closeButton.vue";
 
+const snapPoints = reactive([] as (string | number)[])
+
 defineProps<{
   routes: Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>>[];
 }>();
+
+onMounted(()=>{
+  snapPoints.push(...['230px', `${window.innerHeight - 150}px`, 1])
+})
 </script>
 
 <template>
@@ -14,7 +20,7 @@ defineProps<{
     :modal="false"
     :dismissible="false"
     route="bottom"
-    :snapPoints="['230px', 1]"
+    :snapPoints="snapPoints"
     :ui="{
       content: 'z-30 max-h-none px-3 pt-3 pb-1',
       body: 'overflow-y-auto',
