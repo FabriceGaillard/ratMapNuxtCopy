@@ -12,6 +12,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const markersLibrary = await importLibrary("marker");
   const coreLibrary = await importLibrary("core");
   const routesLibrary = await importLibrary("routes");
+  const geocodingLibrary = await importLibrary("geocoding");
 
   // Fournir globalement
   nuxtApp.provide("mapsLibrary", mapsLibrary);
@@ -19,4 +20,5 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.provide("markersLibrary", markersLibrary);
   nuxtApp.provide("coreLibrary", coreLibrary);
   nuxtApp.provide("routesLibrary", routesLibrary);
+  nuxtApp.provide("geocodingLibrary", geocodingLibrary);
 });
