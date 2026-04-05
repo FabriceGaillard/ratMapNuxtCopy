@@ -11,6 +11,7 @@ import PlaceDrawer from "~/components/drawers/placeDrawer.vue";
 import app from "~/stores/app";
 import ItineraryDrawer from "~/components/drawers/itineraryDrawer.vue";
 import ItineraryButton from "~/components/buttons/itineraryButton.vue";
+import { ObjectHelper } from "~/utils/ObjectHelper";
 
 definePageMeta({
   middleware: ["mobile-check"], // exact match en kebab-case
@@ -137,7 +138,12 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
 
         <MapRoutes :map="map" :routes="routes" />
 
-        <MapMarkers :map="map" :markers="markers" />
+        <MapMarkers :map="map" :markers="markers" @select="{
+            app.place = $event;
+            if (app.mode === 'idle') {
+              app.mode = 'explore';
+            }
+        }"/>
       </Map>
 
       <div class="p-4 absolute bottom-5 left-0 z-10">
