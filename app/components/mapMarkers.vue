@@ -121,8 +121,8 @@ async function createMarkers() {
             emit("select", {
               formattedAddress: city,
               location: {
-                lat: result.geometry.location.lat(),
-                lng: result.geometry.location.lng(),
+                lat,
+                lng,
               },
               viewport: result.geometry.viewport,
               marker: m,

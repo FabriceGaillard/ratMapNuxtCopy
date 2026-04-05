@@ -29,21 +29,23 @@ async function setRoutes() {
   const results = await Promise.all(
     checkedLayers.value
       .map((layer) =>
-        layer.markers.map(async (m) => {
-          const route = await new GoogleRouteRepository().computeRoute(
-            toRaw(app.place!.location),
-            {
-              lat: m.geometry.coordinates[1],
-              lng: m.geometry.coordinates[0],
-            },
-          );
+        layer.markers
+          .filter(m => m.geometry.coordinates[1] !== app.place!.location.lat || m.geometry.coordinates[0] !== app.place!.location.lng)
+          .map(async (m) => {
+            const route = await new GoogleRouteRepository().computeRoute(
+              toRaw(app.place!.location),
+              {
+                lat: m.geometry.coordinates[1],
+                lng: m.geometry.coordinates[0],
+              },
+            );
 
-          return {
-            ...route,
-            marker: m,
-            layer: ObjectHelper.pick(layer, ["label", "color"]),
-          };
-        }),
+            return {
+              ...route,
+              marker: m,
+              layer: ObjectHelper.pick(layer, ["label", "color"]),
+            };
+          }),
       )
       .flat(),
   );
