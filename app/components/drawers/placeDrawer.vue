@@ -26,16 +26,14 @@ defineProps<{
         </template>
         <template v-else>
           <div>
-
-          <DialogTitle class="text-xl font-semibold">
-            {{ place.marker.properties.name }}
-          </DialogTitle>
-          <div class="">{{place.formattedAddress}}</div>
+            <DialogTitle class="text-xl font-semibold">
+              {{ place.marker.properties.name }}
+            </DialogTitle>
+            <div class="">{{place.formattedAddress}}</div>
+            <DialogDescription class="text-muted">
+              {{ place.marker.properties.description }}
+            </DialogDescription>
           </div>
-
-          <DialogDescription class="text-muted">
-            {{ place.marker.properties.description }}
-          </DialogDescription>
         </template>
 
         <CloseButton @click="$emit('close-drawer')" />
