@@ -14,6 +14,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const routesLibrary = await importLibrary("routes");
   const geocodingLibrary = await importLibrary("geocoding");
 
+  // Passer aussi google globalement pour accéder aux APIs
+  const google = (window as any).google;
+
   // Fournir globalement
   nuxtApp.provide("mapsLibrary", mapsLibrary);
   nuxtApp.provide("placesLibrary", placesLibrary);
@@ -21,4 +24,5 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.provide("coreLibrary", coreLibrary);
   nuxtApp.provide("routesLibrary", routesLibrary);
   nuxtApp.provide("geocodingLibrary", geocodingLibrary);
+  nuxtApp.provide("google", google);
 });

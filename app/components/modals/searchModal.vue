@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, watch, nextTick } from "vue";
+import { ref, watch, nextTick, onMounted } from "vue";
 import { useNuxtApp } from "#app";
 import { DialogTitle, DialogDescription, Viewport } from "reka-ui";
 
-const { $placesLibrary } = useNuxtApp();
+const { $google } = useNuxtApp();
 
 const props = defineProps<{ formattedAddress: string; placeholder: string }>();
 
@@ -13,18 +13,24 @@ const emit = defineEmits<{
 }>();
 
 const predictions = ref([]);
-
 const value = ref(props.formattedAddress);
+const sessionToken = ref<any>(null);
 
-const autocompleteService = new $placesLibrary.AutocompleteService();
+// Initialiser le session token au montage
+onMounted(() => {
+  if ($google?.maps?.places?.AutocompleteSessionToken) {
+    sessionToken.value = new $google.maps.places.AutocompleteSessionToken();
+  }
+});
 
 const input = useTemplateRef("input");
 const open = ref(false);
 
-async function selectPrediction(prediction) {
-  const place = new $placesLibrary.Place({ id: prediction.place_id });
+async function selectPrediction(prediction: any) {
+  const place = new $google.maps.places.Place({ id: prediction.placeId });
   await place.fetchFields({
     fields: ["formattedAddress", "location", "viewport", "id"],
+    sessionToken: sessionToken.value,
   });
 
   emit("select", {
@@ -39,6 +45,8 @@ async function selectPrediction(prediction) {
 
   predictions.value = [];
   open.value = false;
+  // Reset session token after selection
+  sessionToken.value = new $google.maps.places.AutocompleteSessionToken();
 }
 
 watch(
@@ -54,9 +62,44 @@ watch(
 );
 
 async function handleInput(value: string) {
-  autocompleteService.getPlacePredictions({ input: value }, (preds) => {
-    predictions.value = preds ?? [];
-  });
+  if (!value || !$google?.maps?.places?.AutocompleteSuggestion) {
+    predictions.value = [];
+    return;
+  }
+
+  try {
+    const request = {
+      input: value,
+      sessionToken: sessionToken.value,
+      // Restriction stricte à la France
+      locationRestriction: {
+        west: -5.0,
+        south: 41.0,
+        east: 8.0,
+        north: 51.0,
+      },
+      // Inclure les types pertinents (max 5)
+      includedPrimaryTypes: [
+        "administrative_area_level_2",  // Départements spécifiques
+        "locality",                       // Villes
+        "street_address",                 // Adresses
+        "route",                          // Routes/Rues
+        "postal_code",                    // Codes postaux
+      ],
+    };
+
+    const { suggestions } = await $google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+
+    predictions.value = suggestions.map((suggestion: any) => ({
+      placeId: suggestion.placePrediction.placeId,
+      description: suggestion.placePrediction.text.text,
+      main_text: suggestion.mainText?.text,
+      secondary_text: suggestion.secondaryText?.text,
+    })) || [];
+  } catch (error) {
+    console.error("Autocomplete error:", error);
+    predictions.value = [];
+  }
 }
 </script>
 

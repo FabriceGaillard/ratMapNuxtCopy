@@ -209,8 +209,8 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
           }
         "
         @close-drawer="
-          app.place = null;
           app.mode = 'idle';
+          app.place = null;
         "
       />
       <ItineraryDrawer
