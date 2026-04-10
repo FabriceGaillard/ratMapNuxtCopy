@@ -4,13 +4,28 @@ import { DialogTitle, DialogDescription } from "reka-ui";
 import { layers } from "~/stores/framacarte";
 import app from "~/stores/app";
 import CloseButton from "../buttons/closeButton.vue";
+import { colorMap } from "~/utils/colors";
+import { fetchIcons } from "~/helpers/fetch";
 
 const open = ref(false);
+const icons = ref<Record<string, SVGElement | null>>({});
+
+onMounted(async () => {
+  const { assosiations, breeding } = await fetchIcons();
+  icons.value = {
+    assosiations,
+    breeding,
+  };
+});
 
 watch(
   () => open.value,
   (v) => (app.listsDrawerOpen = v),
 );
+
+const getLayerIcon = (layer: any) => {
+  return icons.value[layer.icon] || null;
+};
 </script>
 
 <template>
@@ -61,12 +76,17 @@ watch(
             >
               <template #leading>
                 <div
-                  class="bg-gray-200 flex items-center justify-center rounded-full w-6.5 h-6.5"
+                  class="w-[22px] h-[22px] rounded-full bg-elevated flex items-center justify-center shadow-md"
                 >
-                  <UIcon
-                    name="material-symbols:location-on text-gray-500"
-                    class="w-4 h-4"
-                  />
+                  <div
+                    :class="`w-[18px] h-[18px] rounded-full ${colorMap[layer.color] || 'bg-gray-600'} text-inverted flex items-center justify-center`"
+                  >
+                    <div
+                      v-if="getLayerIcon(layer)"
+                      class="w-3 h-3"
+                      v-html="getLayerIcon(layer)?.outerHTML"
+                    />
+                  </div>
                 </div>
               </template>
               <template #trailing>

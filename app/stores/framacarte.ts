@@ -57,7 +57,7 @@ export const layers = reactive([
     label: "Élevages Potentiels",
     description: "Description",
     id: "230084",
-    color: "yellow",
+    color: "orange",
     icon: "breeding" as keyof typeof iconUrls,
     checked: false,
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
