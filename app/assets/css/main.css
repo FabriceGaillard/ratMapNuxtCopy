@@ -46,3 +46,8 @@ body {
 .btn-square {
   @apply w-12 h-12 p-0 flex items-center justify-center rounded-2xl;
 }
+
+.gm-style .gm-style-cc,
+.gm-style img {
+  display: none;
+}

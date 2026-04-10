@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, watch } from "vue";
 import { useNuxtApp } from "#app";
 import { colorMap } from "~/utils/colors";
 import { extractCityFromGeocodeResult } from "~/helpers/PlaceHelper";
+import { fetchIcons } from "~/helpers/fetch";
 
 const { map, markers } = defineProps<{
   map: google.maps.Map;
@@ -13,9 +14,11 @@ const emit = defineEmits<{
   select: [
     data: google.maps.places.PlaceResult & {
       marker: Record<string, unknown>;
-    }
+    },
   ];
 }>();
+
+const icons = await fetchIcons();
 
 const colorMode = useColorMode();
 const { $markersLibrary, $placesLibrary, $geocodingLibrary } = useNuxtApp();
@@ -42,7 +45,7 @@ async function fetchSvg(url: string) {
 }
 
 // 🧩 Création du marker DOM pur
-async function createMarkerElement(color: string, iconUrl: string) {
+async function createMarkerElement(color: string, icon: keyof typeof icons) {
   try {
     const colorClass = colorMap[color] || "bg-gray-600";
     // cercle blanc (outer)
@@ -55,12 +58,10 @@ async function createMarkerElement(color: string, iconUrl: string) {
     inner.className = `w-[18px] h-[18px] rounded-full ${colorClass} text-inverted flex items-center justify-center`;
 
     // icône SVG
-    const svg = await fetchSvg(iconUrl);
-    if (svg) {
-      svg.setAttribute("width", "12");
-      svg.setAttribute("height", "12");
-      inner.appendChild(svg);
-    }
+    const svg = icons[icon]!.cloneNode(true) as SVGElement;
+    svg.setAttribute("width", "12");
+    svg.setAttribute("height", "12");
+    inner.appendChild(svg);
 
     outer.appendChild(inner);
     return outer;
@@ -140,7 +141,10 @@ async function createMarkers() {
   }
 }
 
-watch(() => [markers, colorMode], createMarkers, { deep: true, immediate: true });
+watch(() => [markers, colorMode], createMarkers, {
+  deep: true,
+  immediate: true,
+});
 onUnmounted(destroyMarkers);
 onMounted(createMarkers);
 </script>

@@ -6,16 +6,21 @@ import MapRoutes from "~/components/mapRoutes.vue";
 import { setMarkers, checkedLayers, markers } from "~/stores/framacarte";
 import GoogleRouteRepository from "~/repositories/GoogleRouteRepository";
 import SearchModal from "~/components/modals/searchModal.vue";
-import ItineraryModal from "~/components/modals/itineraryModal.vue";
 import PlaceDrawer from "~/components/drawers/placeDrawer.vue";
 import app from "~/stores/app";
 import ItineraryDrawer from "~/components/drawers/itineraryDrawer.vue";
 import ItineraryButton from "~/components/buttons/itineraryButton.vue";
 import { ObjectHelper } from "~/utils/ObjectHelper";
+import { fetchIcons } from "~/helpers/fetch";
+import { layers } from "~/stores/framacarte";
+import AssosationsButton from "~/components/buttons/assosationsButton.vue";
+import BreedingButton from "~/components/buttons/breedingButton.vue";
 
 definePageMeta({
   middleware: ["mobile-check"], // exact match en kebab-case
 });
+
+const { assosiations, breeding } = await fetchIcons();
 
 const routes = ref(
   [] as Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>>[],
@@ -30,7 +35,11 @@ async function setRoutes() {
     checkedLayers.value
       .map((layer) =>
         layer.markers
-          .filter(m => m.geometry.coordinates[1] !== app.place!.location.lat || m.geometry.coordinates[0] !== app.place!.location.lng)
+          .filter(
+            (m) =>
+              m.geometry.coordinates[1] !== app.place!.location.lat ||
+              m.geometry.coordinates[0] !== app.place!.location.lng,
+          )
           .map(async (m) => {
             const route = await new GoogleRouteRepository().computeRoute(
               toRaw(app.place!.location),
@@ -140,12 +149,18 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
 
         <MapRoutes :map="map" :routes="routes" />
 
-        <MapMarkers :map="map" :markers="markers" @select="{
-            app.place = $event;
-            if (app.mode === 'idle') {
-              app.mode = 'explore';
+        <MapMarkers
+          :map="map"
+          :markers="markers"
+          @select="
+            {
+              app.place = $event;
+              if (app.mode === 'idle') {
+                app.mode = 'explore';
+              }
             }
-        }"/>
+          "
+        />
       </Map>
 
       <div class="p-4 absolute bottom-5 left-0 z-10">
@@ -160,9 +175,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
       </div>
 
       <div class="p-4 absolute bottom-5 right-0 z-10 flex">
-        <div class="ml-auto flex-col flex gap-3">
-          <ListsDrawer />
-
+        <div class="ml-auto flex-col items-end flex gap-3">
           <SearchModal
             :formatted-address="app.place?.formattedAddress ?? ''"
             placeholder="Choisir un lieu de départ"
@@ -176,12 +189,15 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
           >
             <ItineraryButton />
           </SearchModal>
-
-
-
-
+          <div class="space-x-2">
+            <AssosationsButton :icon="assosiations" />
+            <BreedingButton :icon="breeding" />
+            <ListsDrawer />
+          </div>
         </div>
       </div>
+
+      <Logo class="absolute bottom-2 left-4.5" />
 
       <PlaceDrawer
         :open="app.mode === 'explore'"

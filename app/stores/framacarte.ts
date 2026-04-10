@@ -1,13 +1,18 @@
 import { computed } from "vue";
 import FramacarteRepository from "~/repositories/FramacarteRepository";
 
+export const iconUrls = {
+  assosiations: "/icons/family_home.svg",
+  breeding: "/icons/rat.svg",
+};
+
 export const layers = reactive([
   {
     label: "Tops Assos",
     description: "Description",
     id: "221549",
     color: "green",
-    icon: "/icons/family_home.svg",
+    icon: "assosiations" as keyof typeof iconUrls,
     checked: true,
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },
@@ -16,7 +21,7 @@ export const layers = reactive([
     description: "Description",
     id: "221570",
     color: "red",
-    icon: "/icons/family_home.svg",
+    icon: "assosiations" as keyof typeof iconUrls,
     checked: false,
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },
@@ -25,7 +30,7 @@ export const layers = reactive([
     description: "Description",
     id: "221571",
     color: "blue",
-    icon: "/icons/family_home.svg",
+    icon: "assosiations" as keyof typeof iconUrls,
     checked: false,
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },
@@ -34,7 +39,7 @@ export const layers = reactive([
     description: "Description",
     id: "221574",
     color: "yellow",
-    icon: "/icons/family_home.svg",
+    icon: "assosiations" as keyof typeof iconUrls,
     checked: false,
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },
@@ -44,7 +49,7 @@ export const layers = reactive([
     description: "Description",
     id: "228024",
     color: "purple",
-    icon: "/icons/rat.svg",
+    icon: "breeding" as keyof typeof iconUrls,
     checked: false,
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },
@@ -53,7 +58,7 @@ export const layers = reactive([
     description: "Description",
     id: "230084",
     color: "yellow",
-    icon: "/icons/rat.svg",
+    icon: "breeding" as keyof typeof iconUrls,
     checked: false,
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },

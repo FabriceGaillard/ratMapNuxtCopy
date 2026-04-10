@@ -3,7 +3,6 @@ import ListButton from "~/components/buttons/listButton.vue";
 import { DialogTitle, DialogDescription } from "reka-ui";
 import { layers } from "~/stores/framacarte";
 import app from "~/stores/app";
-import { colorMap } from "~/utils/colors";
 import CloseButton from "../buttons/closeButton.vue";
 
 const open = ref(false);
@@ -27,7 +26,7 @@ watch(
   >
     <ListButton @click="open = true" />
     <template #content>
-      <div class="flex items-center gap-2 w-full px-3 pt-3 pb-1 ">
+      <div class="flex items-center gap-2 w-full px-3 pt-3 pb-1">
         <UIcon
           name="material-symbols:location-on-outline-rounded"
           class="w-5 h-5 ml-1.5"
