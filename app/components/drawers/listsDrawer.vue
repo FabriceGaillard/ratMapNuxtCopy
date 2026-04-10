@@ -76,10 +76,10 @@ const getLayerIcon = (layer: any) => {
             >
               <template #leading>
                 <div
-                  class="w-[22px] h-[22px] rounded-full bg-elevated flex items-center justify-center shadow-md"
+                  class="w-5.5 h-5.5 rounded-full bg-elevated flex items-center justify-center shadow-md"
                 >
                   <div
-                    :class="`w-[18px] h-[18px] rounded-full ${colorMap[layer.color] || 'bg-gray-600'} text-inverted flex items-center justify-center`"
+                    :class="`w-4.5 h-4.5 rounded-full ${colorMap[layer.color] || 'bg-gray-600'} text-inverted flex items-center justify-center`"
                   >
                     <div
                       v-if="getLayerIcon(layer)"
@@ -99,23 +99,6 @@ const getLayerIcon = (layer: any) => {
                 />
               </template>
             </UButton>
-
-            <!-- <div>
-              <div class="text-highlited">
-                <UChip
-                  standalone
-                  inset
-                  class="ml-auto"
-                  size="xl"
-                  :ui="{
-                    base: `${colorMap[layer.color]}`,
-                  }"
-                />
-                {{ layer.label }}
-              </div>
-            </div>
-
-            <USwitch v-model="layer.checked" class="ml-auto" /> -->
           </template>
         </UPageCard>
       </UPageList>

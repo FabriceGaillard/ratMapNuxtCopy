@@ -10,16 +10,6 @@ const props = defineProps<{
       })
     | null;
 }>();
-
-watch(
-  () => props.place,
-  (newPlace) => {
-    if (newPlace) {
-      console.log("New place selected:", toRaw(newPlace));
-    }
-  },
-  { immediate: true },
-);
 </script>
 
 <template>
