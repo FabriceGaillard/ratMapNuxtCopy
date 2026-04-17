@@ -4,12 +4,20 @@ import { formatDuration } from "~/helpers/duration";
 import { colorMap } from "~/utils/colors";
 import CloseButton from "../buttons/closeButton.vue";
 import app from "~/stores/app";
-import PlaceDrawer from "./placeDrawer.vue";
+import GoogleRouteRepository from "~/repositories/GoogleRouteRepository";
 
 const snapPoints = reactive([] as (string | number)[]);
 
-defineProps<{
-  routes: Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>>[];
+const props = defineProps<{
+  routes: (Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>> & {
+    marker: Record<string, any>;
+    layer: Record<string, any>;
+  })[];
+}>();
+
+const emit = defineEmits<{
+  close: [];
+  selectRoute: [route: (typeof props.routes)[number]];
 }>();
 
 onMounted(() => {
@@ -22,6 +30,7 @@ onMounted(() => {
     :modal="false"
     :dismissible="false"
     route="bottom"
+    :snapPoints="snapPoints"
     :ui="{
       content: 'max-h-none px-3 pt-3 pb-1',
       body: 'overflow-y-auto',
@@ -46,8 +55,10 @@ onMounted(() => {
       <UPageList divide v-else>
         <UPageCard
           v-for="route in routes"
-          :key="route.id"
+          :key="`${route.destination.lat}-${route.destination.lng}`"
           variant="ghost"
+          class="cursor-pointer"
+          @click="emit('selectRoute', route)"
           :ui="{
             container: 'px-0',
             body: 'w-full',

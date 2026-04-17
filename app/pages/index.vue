@@ -7,6 +7,7 @@ import { setMarkers, checkedLayers, markers } from "~/stores/framacarte";
 import GoogleRouteRepository from "~/repositories/GoogleRouteRepository";
 import SearchModal from "~/components/modals/searchModal.vue";
 import PlaceDrawer from "~/components/drawers/placeDrawer.vue";
+import RouteDrawer from "~/components/drawers/routeDrawer.vue";
 import app from "~/stores/app";
 import ItineraryDrawer from "~/components/drawers/itineraryDrawer.vue";
 import ItineraryButton from "~/components/buttons/itineraryButton.vue";
@@ -22,15 +23,27 @@ definePageMeta({
 
 const { assosiations, breeding } = await fetchIcons();
 
-const routes = ref(
-  [] as Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>>[],
-);
+type RouteWithMeta = Awaited<
+  ReturnType<GoogleRouteRepository["computeRoute"]>
+> & {
+  marker: Record<string, any>;
+  layer: Record<string, any>;
+};
+
+const routes = ref<RouteWithMeta[]>([]);
 
 const itinerary = app.itinerary;
 
 const isOpened = ref(false);
 
 const loadingRoutes = ref(false);
+
+const selectedRoute = ref<RouteWithMeta | null>(null);
+
+function selectRoute(route: RouteWithMeta) {
+  selectedRoute.value = route;
+  app.mode = "route";
+}
 
 async function setRoutes() {
   if (!app.place) return;
@@ -100,6 +113,15 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
         "
       >
         <div class="p-4 absolute top-0 left-0 z-10 w-full">
+          <UButton
+            v-if="app.mode === 'route'"
+            ml-auto
+            size="xl"
+            variant="soft"
+            color="neutral"
+            icon="material-symbols:arrow-left-alt-rounded"
+            @click="app.mode = 'itinerary'"
+          />
           <SearchModal
             v-if="['idle', 'explore'].includes(app.mode)"
             :formatted-address="app.place?.formattedAddress ?? ''"
@@ -155,7 +177,12 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
           />
         </div>
 
-        <MapRoutes :map="map" :routes="routes" />
+        <MapRoutes
+          :map="map"
+          :routes="routes"
+          :selected-route="selectedRoute"
+          @select="selectRoute($event as RouteWithMeta)"
+        />
 
         <MapMarkers
           :map="map"
@@ -185,6 +212,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
       <div class="p-4 absolute bottom-5 right-0 z-10 flex">
         <div class="ml-auto flex-col items-end flex gap-3">
           <SearchModal
+            v-if="!['itinerary', 'route'].includes(app.mode)"
             :formatted-address="app.place?.formattedAddress ?? ''"
             placeholder="Choisir un lieu de départ"
             @select="
@@ -233,6 +261,15 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
           app.place = null;
           app.mode = 'idle';
           routes = [];
+        "
+        @select-route="selectRoute($event as RouteWithMeta)"
+      />
+      <RouteDrawer
+        :open="app.mode === 'route'"
+        :route="selectedRoute"
+        @close="
+          app.mode = 'itinerary';
+          selectedRoute = null;
         "
       />
     </ClientOnly>

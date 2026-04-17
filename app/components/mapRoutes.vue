@@ -3,13 +3,19 @@ import GoogleRouteRepository from "~/repositories/GoogleRouteRepository";
 import { onMounted, onUnmounted, watch } from "vue";
 import { useNuxtApp } from "#app";
 
-const { map, routes } = defineProps<{
+type RouteItem = Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>>;
+
+const props = defineProps<{
   map: google.maps.Map;
-  routes: Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>>[];
+  routes: RouteItem[];
+  selectedRoute?: RouteItem | null;
+}>();
+
+const emit = defineEmits<{
+  select: [route: RouteItem];
 }>();
 
 const colorMode = useColorMode();
-
 
 const { $mapsLibrary, $markersLibrary } = useNuxtApp();
 
@@ -32,11 +38,11 @@ function destroyRoutes() {
 
 function createRoutes() {
   destroyRoutes();
-  routes.forEach((route) => {
+  props.routes.forEach((route) => {
     // Bordure derrière
     const outlineLine = new $mapsLibrary.Polyline({
       path: route.path,
-      map,
+      map: props.map,
       strokeColor: "#403CE6",
       strokeWeight: 8,
       zIndex: 1,
@@ -45,7 +51,7 @@ function createRoutes() {
     // Ligne principale
     const mainLine = new $mapsLibrary.Polyline({
       path: route.path,
-      map,
+      map: props.map,
       strokeColor: "#BBCAFB",
       strokeWeight: 4,
       zIndex: 2,
@@ -54,7 +60,7 @@ function createRoutes() {
     // Marker origin
     const originMarker = new $markersLibrary.Marker({
       position: route.origin,
-      map,
+      map: props.map,
       icon: {
         path: google.maps.SymbolPath.CIRCLE, // rond
         fillColor: "#ffffff",
@@ -68,7 +74,7 @@ function createRoutes() {
     // Marker destination
     const destinationMarker = new $markersLibrary.Marker({
       position: route.destination,
-      map,
+      map: props.map,
       icon: {
         path: google.maps.SymbolPath.CIRCLE, // rond
         fillColor: "#ffffff",
@@ -79,6 +85,10 @@ function createRoutes() {
       },
     });
 
+    outlineLine.addListener("click", () => emit("select", route));
+    mainLine.addListener("click", () => emit("select", route));
+    destinationMarker.addListener("click", () => emit("select", route));
+
     routeInstances.push({
       outlineLine,
       mainLine,
@@ -88,7 +98,41 @@ function createRoutes() {
   });
 }
 
-watch(() => [routes, colorMode], createRoutes, { deep: true, immediate: true });
+function isSelected(route: RouteItem) {
+  return (
+    props.selectedRoute?.destination.lat === route.destination.lat &&
+    props.selectedRoute?.destination.lng === route.destination.lng
+  );
+}
+
+function applyHighlight(index: number, highlighted: boolean) {
+  const instance = routeInstances[index];
+  if (!instance) return;
+  instance.outlineLine.setOptions({
+    strokeColor: highlighted ? "#365C80" : "#403CE6",
+    strokeWeight: 8,
+    zIndex: highlighted ? 10 : 1,
+  });
+  instance.mainLine.setOptions({
+    strokeColor: highlighted ? "#71E8FE" : "#BBCAFB",
+    strokeWeight: 4,
+    zIndex: highlighted ? 11 : 2,
+  });
+}
+
+watch(
+  () => props.selectedRoute,
+  () => {
+    props.routes.forEach((route, index) => {
+      applyHighlight(index, isSelected(route));
+    });
+  },
+);
+
+watch(() => [props.routes, colorMode], createRoutes, {
+  deep: true,
+  immediate: true,
+});
 onUnmounted(destroyRoutes);
 onMounted(createRoutes);
 </script>

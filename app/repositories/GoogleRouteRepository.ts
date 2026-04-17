@@ -17,7 +17,8 @@ export default class RouteRepository {
         headers: {
           "Content-Type": "application/json",
           "X-Goog-Api-Key": this.apiKey,
-          "X-Goog-FieldMask": "routes.polyline,routes.duration",
+          "X-Goog-FieldMask":
+            "routes.polyline,routes.duration,routes.distanceMeters",
         },
         body: JSON.stringify({
           origin: {
@@ -47,6 +48,7 @@ export default class RouteRepository {
     return {
       path,
       seconds: parseInt(data.routes[0].duration, 10),
+      meters: data.routes[0].distanceMeters as number,
       origin,
       destination,
     };
