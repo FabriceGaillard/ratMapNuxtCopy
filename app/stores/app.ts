@@ -5,7 +5,7 @@ export default reactive({
 
   itinerary: {
     limits: {
-      length: Infinity,
+      length: 30,
       hours: 3,
     },
   },

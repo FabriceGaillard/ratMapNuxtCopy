@@ -7,6 +7,8 @@ import app from "~/stores/app";
 import GoogleRouteRepository from "~/repositories/GoogleRouteRepository";
 
 const snapPoints = reactive([] as (string | number)[]);
+const activeSnapPoint = ref<string | number | null>(null);
+const listEl = ref<{ $el: HTMLElement } | null>(null);
 
 const props = defineProps<{
   loadingRoutes?: boolean;
@@ -24,14 +26,25 @@ const emit = defineEmits<{
 onMounted(() => {
   snapPoints.push(...["230px", `${window.innerHeight - 150}px`, 1]);
 });
+
+function handle(a) {
+  activeSnapPoint.value = a;
+}
+
+watch(activeSnapPoint, (val, old) => {
+  if (val !== 1) {
+    listEl.value?.$el?.scrollTo({ top: 0 });
+  }
+});
 </script>
 
 <template>
   <UDrawer
     :modal="false"
     :dismissible="false"
-    route="bottom"
+    direction="bottom"
     :snapPoints="snapPoints"
+    @update:activeSnapPoint="handle"
     :ui="{
       content: 'max-h-none px-3 pt-3 pb-1',
       body: 'overflow-y-auto',
@@ -67,13 +80,19 @@ onMounted(() => {
         <span v-else-if="!routes.length" class="text-dimmed text-sm">
           Aucun itinéraire disponible
         </span>
-        <UPageList divide v-else class="overflow-y-auto flex-1 min-h-0">
+        <UPageList
+          ref="listEl"
+          divide
+          v-else
+          :class="[
+            'flex-1 min-h-0',
+            activeSnapPoint === 1 ? 'overflow-y-auto' : 'overflow-y-hidden',
+          ]"
+        >
           <UPageCard
             v-for="route in routes"
             :key="`${route.destination.lat}-${route.destination.lng}`"
             variant="ghost"
-            class="cursor-pointer"
-            @click="emit('selectRoute', route)"
             :ui="{
               container: 'px-0 w-full',
               body: 'w-full',
