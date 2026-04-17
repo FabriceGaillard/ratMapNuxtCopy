@@ -3,6 +3,10 @@ import { ref, onMounted, watch } from "vue";
 import { useNuxtApp } from "#app";
 import app from "~/stores/app";
 
+const props = defineProps<{
+  routes?: { path: { lat: number; lng: number }[] }[];
+}>();
+
 const { $mapsLibrary, $placesLibrary, $coreLibrary } = useNuxtApp();
 
 const mapElement = ref<HTMLDivElement | null>(null);
@@ -42,7 +46,7 @@ async function createMap() {
     center,
     renderingType: $mapsLibrary.RenderingType.VECTOR,
     // mapId: config.public.googleMapId,
-    mapId: 'MAP_DEMO_ID',
+    mapId: "MAP_DEMO_ID",
     disableDefaultUI: true,
     gestureHandling: "greedy",
     colorScheme:
@@ -85,10 +89,10 @@ async function createMap() {
 }
 
 watch(
-  () => app,
+  () => props.routes,
   () => {
     if (!map.value) return;
-    if (app.mode === "itinerary") {
+    if (!props.routes?.length) {
       // Centrer sur la France
       const franceBounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(43, -5), // SW
@@ -98,6 +102,17 @@ watch(
       // const drawerHeight = window.innerHeight * 0.45 + 50;
       map.value.fitBounds(franceBounds, {
         bottom: 200,
+      });
+    } else {
+      const bounds = new google.maps.LatLngBounds();
+      props.routes.forEach((route) => {
+        route.path.forEach((point) => bounds.extend(point));
+      });
+      map.value.fitBounds(bounds, {
+        bottom: 300,
+        top: 250,
+        left: 50,
+        right: 50,
       });
     }
   },

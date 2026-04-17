@@ -103,6 +103,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
       <Map
         v-slot="{ map }"
         class="h-screen"
+        :routes="routes"
         @select="
           {
             app.place = $event;
