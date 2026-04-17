@@ -64,16 +64,13 @@ function typesToNominatimZoom(types: string[] | undefined): number | null {
   if (!types?.length) return 10;
   if (types.some((t) => NO_BOUNDARY_TYPES.has(t))) return null;
   if (types.includes("country")) return 3;
-  if (
-    types.includes("administrative_area_level_1") ||
-    types.includes("administrative_area_level_2")
-  )
-    return 5;
+  if (types.includes("administrative_area_level_1")) return 5;
+  if (types.includes("administrative_area_level_2")) return 8;
   if (
     types.includes("administrative_area_level_3") ||
     types.includes("administrative_area_level_4")
   )
-    return 8;
+    return 10;
   if (
     types.includes("locality") ||
     types.includes("postal_town") ||
@@ -100,14 +97,27 @@ watch(
     clearBoundary();
     if (!place?.location) return;
 
-    const nominatimZoom = typesToNominatimZoom((place as any).types);
+    const types = (place as any).types as string[] | undefined;
+    const nominatimZoom = typesToNominatimZoom(types);
     if (nominatimZoom === null) return;
 
-    const geojson = await nominatim.getBoundaryByLatLng(
-      place.location.lat,
-      place.location.lng,
-      nominatimZoom,
-    );
+    // For administrative areas, search by name (more reliable than zoom-based reverse geocoding)
+    const formattedAddress = (place as any).formattedAddress as
+      | string
+      | undefined;
+    let geojson = formattedAddress
+      ? await nominatim.getBoundaryByQuery(formattedAddress)
+      : null;
+
+    // Fallback to reverse geocoding if name search failed
+    if (!geojson) {
+      geojson = await nominatim.getBoundaryByLatLng(
+        place.location.lat,
+        place.location.lng,
+        nominatimZoom,
+      );
+    }
+
     if (!geojson) return;
 
     drawGeojson(geojson);
