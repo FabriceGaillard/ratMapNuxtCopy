@@ -96,7 +96,9 @@ async function setRoutes() {
   );
 
   await Promise.allSettled(allPromises);
-  routes.value = collected.sort((a, b) => a.seconds - b.seconds);
+  routes.value = collected
+    .sort((a, b) => a.seconds - b.seconds)
+    .slice(0, itinerary.limits.length);
   loadingRoutes.value = false;
 }
 
