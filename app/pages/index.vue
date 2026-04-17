@@ -45,6 +45,20 @@ function selectRoute(route: RouteWithMeta) {
   app.mode = "route";
 }
 
+function onMarkerSelect(event: any) {
+  if (app.mode === "itinerary" || app.mode === "route") {
+    const linked = routes.value.find(
+      (r) => r.marker?.properties?.name === event.marker?.properties?.name,
+    );
+    if (linked) selectRoute(linked);
+  } else {
+    app.place = event;
+    if (app.mode === "idle") {
+      app.mode = "explore";
+    }
+  }
+}
+
 async function setRoutes() {
   if (!app.place) return;
 
@@ -188,14 +202,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
         <MapMarkers
           :map="map"
           :markers="markers"
-          @select="
-            {
-              app.place = $event;
-              if (app.mode === 'idle') {
-                app.mode = 'explore';
-              }
-            }
-          "
+          @select="onMarkerSelect($event)"
         />
       </Map>
 
