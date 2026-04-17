@@ -28,6 +28,8 @@ const routes = ref(
 
 const itinerary = app.itinerary;
 
+const isOpened = ref(false);
+
 async function setRoutes() {
   if (!app.place) return;
 
@@ -200,7 +202,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
       <Logo class="absolute bottom-2 left-4.5" />
 
       <PlaceDrawer
-        :open="app.mode === 'explore'"
+        :open="app.mode === 'explore' || isOpened"
         :place="app.place"
         @select="
           {
@@ -208,13 +210,17 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
             setRoutes();
           }
         "
-        @close-drawer="
-          app.mode = 'idle';
-          app.place = null;
+        @close-drawer="app.mode = 'idle'"
+        @animation-end="
+          {
+            if (app.mode === 'idle') {
+              app.place = null;
+            }
+          }
         "
       />
       <ItineraryDrawer
-        :open="app.mode === 'itinerary'"
+        :open="app.mode === 'itinerary' && !isOpened"
         :routes="routes"
         @close="
           app.place = null;

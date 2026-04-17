@@ -22,7 +22,7 @@ const props = defineProps<{
     }"
   >
     <template #content>
-      <div class="flex items-start gap-2 w-full pb-1 relative" v-if="place">
+      <div class="flex items-start gap-2 w-full pb-1 relative">
         <CloseButton
           @click="$emit('close-drawer')"
           class="absolute top-0 right-0"

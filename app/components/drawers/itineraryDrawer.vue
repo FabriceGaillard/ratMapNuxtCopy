@@ -3,16 +3,18 @@ import { DialogTitle, DialogDescription } from "reka-ui";
 import { formatDuration } from "~/helpers/duration";
 import { colorMap } from "~/utils/colors";
 import CloseButton from "../buttons/closeButton.vue";
+import app from "~/stores/app";
+import PlaceDrawer from "./placeDrawer.vue";
 
-const snapPoints = reactive([] as (string | number)[])
+const snapPoints = reactive([] as (string | number)[]);
 
 defineProps<{
   routes: Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>>[];
 }>();
 
-onMounted(()=>{
-  snapPoints.push(...['230px', `${window.innerHeight - 150}px`, 1])
-})
+onMounted(() => {
+  snapPoints.push(...["230px", `${window.innerHeight - 150}px`, 1]);
+});
 </script>
 
 <template>
@@ -22,7 +24,7 @@ onMounted(()=>{
     route="bottom"
     :snapPoints="snapPoints"
     :ui="{
-      content: 'z-30 max-h-none px-3 pt-3 pb-1',
+      content: 'max-h-none px-3 pt-3 pb-1',
       body: 'overflow-y-auto',
     }"
   >
