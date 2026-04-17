@@ -75,7 +75,7 @@ onMounted(() => {
             class="cursor-pointer"
             @click="emit('selectRoute', route)"
             :ui="{
-              container: 'px-0',
+              container: 'px-0 w-full',
               body: 'w-full',
             }"
           >
