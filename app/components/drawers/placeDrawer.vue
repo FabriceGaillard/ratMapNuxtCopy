@@ -2,6 +2,7 @@
 import { DialogTitle, DialogDescription } from "reka-ui";
 import CloseButton from "../buttons/closeButton.vue";
 import { parseLinksInText } from "~/helpers/string";
+import app from "~/stores/app";
 
 const props = defineProps<{
   place:
@@ -9,6 +10,7 @@ const props = defineProps<{
         marker: Record<string, unknown>;
       })
     | null;
+  loadingRoutes?: boolean;
 }>();
 </script>
 
@@ -51,10 +53,13 @@ const props = defineProps<{
       </div>
       <div>
         <UButton
+          v-if="app.mode !== 'itinerary'"
           icon="material-symbols:directions-rounded"
           label="itinéraire"
           @click="$emit('select')"
           class="text-normal font-normal"
+          :loading="loadingRoutes"
+          loading-icon="material-symbols:progress-activity"
         />
       </div>
     </template>

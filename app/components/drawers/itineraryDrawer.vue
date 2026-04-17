@@ -22,7 +22,6 @@ onMounted(() => {
     :modal="false"
     :dismissible="false"
     route="bottom"
-    :snapPoints="snapPoints"
     :ui="{
       content: 'max-h-none px-3 pt-3 pb-1',
       body: 'overflow-y-auto',

@@ -30,8 +30,12 @@ const itinerary = app.itinerary;
 
 const isOpened = ref(false);
 
+const loadingRoutes = ref(false);
+
 async function setRoutes() {
   if (!app.place) return;
+
+  loadingRoutes.value = true;
 
   const results = await Promise.all(
     checkedLayers.value
@@ -59,7 +63,9 @@ async function setRoutes() {
           }),
       )
       .flat(),
-  );
+  ).finally(() => {
+    loadingRoutes.value = false;
+  });
 
   routes.value = results
     .filter((r) => r.seconds / 3600 <= itinerary.limits.hours)
@@ -205,11 +211,12 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
         :open="app.mode === 'explore' || isOpened"
         :place="app.place"
         @select="
-          {
+          async () => {
+            await setRoutes();
             app.mode = 'itinerary';
-            setRoutes();
           }
         "
+        :loadingRoutes="loadingRoutes"
         @close-drawer="app.mode = 'idle'"
         @animation-end="
           {
