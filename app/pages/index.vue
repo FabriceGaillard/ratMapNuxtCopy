@@ -16,6 +16,7 @@ import { fetchIcons } from "~/helpers/fetch";
 import { layers } from "~/stores/framacarte";
 import AssosationsButton from "~/components/buttons/assosationsButton.vue";
 import BreedingButton from "~/components/buttons/breedingButton.vue";
+import MapBoundary from "~/components/mapBoundary.vue";
 
 definePageMeta({
   middleware: ["mobile-check"], // exact match en kebab-case
@@ -198,6 +199,8 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
           :selected-route="selectedRoute"
           @select="selectRoute($event as RouteWithMeta)"
         />
+
+        <MapBoundary :map="map" />
 
         <MapMarkers
           :map="map"
