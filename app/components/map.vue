@@ -72,7 +72,7 @@ async function createMap() {
     const place = new $placesLibrary.Place({ id: event.placeId });
 
     await place.fetchFields({
-      fields: ["formattedAddress", "location", "viewport", "id"],
+      fields: ["formattedAddress", "location", "viewport", "id", "types"],
     });
 
     map.value?.fitBounds(place.viewport);
@@ -81,6 +81,7 @@ async function createMap() {
       formattedAddress: place.formattedAddress,
       viewport: place.viewport,
       id: place.id,
+      types: place.types,
       location: {
         lat: place.location.lat(),
         lng: place.location.lng(),

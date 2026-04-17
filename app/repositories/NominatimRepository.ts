@@ -14,8 +14,9 @@ export default class NominatimRepository {
   async getBoundaryByLatLng(
     lat: number,
     lng: number,
+    nominatimZoom = 10,
   ): Promise<NominatimGeoJSON | null> {
-    const url = `${this.baseUrl}/reverse?lat=${lat}&lon=${lng}&polygon_geojson=1&format=json&zoom=10`;
+    const url = `${this.baseUrl}/reverse?lat=${lat}&lon=${lng}&polygon_geojson=1&format=json&zoom=${nominatimZoom}`;
 
     try {
       const result: any = await globalThis

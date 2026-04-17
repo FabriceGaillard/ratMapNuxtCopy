@@ -47,15 +47,60 @@ function drawGeojson(geojson: NominatimGeoJSON) {
   }
 }
 
+const NO_BOUNDARY_TYPES = new Set([
+  "street_address",
+  "route",
+  "premise",
+  "subpremise",
+  "street_number",
+  "establishment",
+  "point_of_interest",
+  "tourist_attraction",
+  "park",
+  "natural_feature",
+]);
+
+/**
+ * Mappe les types Google Maps vers le zoom Nominatim correspondant.
+ * Beaucoup plus fiable que l'heuristique basée sur la taille du viewport.
+ * Retourne null si le type n'est pas délimitable (adresse, POI...).
+ */
+function typesToNominatimZoom(types: string[] | undefined): number | null {
+  if (!types?.length) return 10;
+  if (types.some((t) => NO_BOUNDARY_TYPES.has(t))) return null;
+  if (types.includes("country")) return 3;
+  if (
+    types.includes("administrative_area_level_1") ||
+    types.includes("administrative_area_level_2")
+  )
+    return 5;
+  if (
+    types.includes("administrative_area_level_3") ||
+    types.includes("administrative_area_level_4")
+  )
+    return 8;
+  if (
+    types.includes("locality") ||
+    types.includes("postal_town") ||
+    types.includes("political")
+  )
+    return 10;
+  return 10;
+}
+
 watch(
   () => app.place,
   async (place) => {
     clearBoundary();
     if (!place?.location) return;
 
+    const nominatimZoom = typesToNominatimZoom((place as any).types);
+    if (nominatimZoom === null) return;
+
     const geojson = await nominatim.getBoundaryByLatLng(
       place.location.lat,
       place.location.lng,
+      nominatimZoom,
     );
     if (!geojson) return;
 
