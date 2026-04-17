@@ -11,22 +11,16 @@ const { map } = defineProps<{
 const nominatim = new NominatimRepository();
 let polygons: google.maps.Polygon[] = [];
 
-const STYLE = {
-  fillColor: "#4285F4",
-  fillOpacity: 0.1,
-  strokeColor: "#4285F4",
-  strokeWeight: 2,
-  clickable: false,
-};
+function ringToLatLng(ring: number[][]): google.maps.LatLngLiteral[] {
+  return ring.map((coord) => ({
+    lat: coord[1] as number,
+    lng: coord[0] as number,
+  }));
+}
 
 function clearBoundary() {
   polygons.forEach((p) => p.setMap(null));
   polygons = [];
-}
-
-/** GeoJSON [lng, lat] ring → google.maps.LatLngLiteral[] */
-function ringToLatLng(ring: number[][]): google.maps.LatLngLiteral[] {
-  return ring.map(([lng, lat]) => ({ lat, lng }));
 }
 
 function drawGeojson(geojson: NominatimGeoJSON) {
@@ -38,12 +32,18 @@ function drawGeojson(geojson: NominatimGeoJSON) {
       : (geojson.coordinates as number[][][][]).flat();
 
   for (const ring of rings) {
-    const poly = new google.maps.Polygon({
-      paths: ringToLatLng(ring),
-      map: rawMap,
-      ...STYLE,
-    });
-    polygons.push(poly);
+    polygons.push(
+      new google.maps.Polygon({
+        paths: ringToLatLng(ring),
+        fillColor: "#ef4444",
+        fillOpacity: 0.08,
+        strokeColor: "#ef4444",
+        strokeWeight: 2,
+        strokeOpacity: 1,
+        clickable: false,
+        map: rawMap,
+      }),
+    );
   }
 }
 
@@ -60,11 +60,6 @@ const NO_BOUNDARY_TYPES = new Set([
   "natural_feature",
 ]);
 
-/**
- * Mappe les types Google Maps vers le zoom Nominatim correspondant.
- * Beaucoup plus fiable que l'heuristique basée sur la taille du viewport.
- * Retourne null si le type n'est pas délimitable (adresse, POI...).
- */
 function typesToNominatimZoom(types: string[] | undefined): number | null {
   if (!types?.length) return 10;
   if (types.some((t) => NO_BOUNDARY_TYPES.has(t))) return null;
@@ -87,6 +82,17 @@ function typesToNominatimZoom(types: string[] | undefined): number | null {
     return 10;
   return 10;
 }
+
+watch(
+  () => app.mode,
+  (mode) => {
+    if (mode === "itinerary" || mode === "route") {
+      polygons.forEach((p) => p.setVisible(false));
+    } else {
+      polygons.forEach((p) => p.setVisible(true));
+    }
+  },
+);
 
 watch(
   () => app.place,
