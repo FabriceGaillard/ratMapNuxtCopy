@@ -62,42 +62,41 @@ function onMarkerSelect(event: any) {
 async function setRoutes() {
   if (!app.place) return;
 
+  routes.value = [];
   loadingRoutes.value = true;
 
-  const results = await Promise.all(
-    checkedLayers.value
-      .map((layer) =>
-        layer.markers
-          .filter(
-            (m) =>
-              m.geometry.coordinates[1] !== app.place!.location.lat ||
-              m.geometry.coordinates[0] !== app.place!.location.lng,
-          )
-          .map(async (m) => {
-            const route = await new GoogleRouteRepository().computeRoute(
-              toRaw(app.place!.location),
-              {
-                lat: m.geometry.coordinates[1],
-                lng: m.geometry.coordinates[0],
-              },
-            );
+  const collected: RouteWithMeta[] = [];
 
-            return {
+  const allPromises = checkedLayers.value.flatMap((layer) =>
+    layer.markers
+      .filter(
+        (m) =>
+          m.geometry.coordinates[1] !== app.place!.location.lat ||
+          m.geometry.coordinates[0] !== app.place!.location.lng,
+      )
+      .map((m) =>
+        new GoogleRouteRepository()
+          .computeRoute(toRaw(app.place!.location), {
+            lat: m.geometry.coordinates[1],
+            lng: m.geometry.coordinates[0],
+          })
+          .then((route) => {
+            const withMeta = {
               ...route,
               marker: m,
               layer: ObjectHelper.pick(layer, ["label", "color"]),
             };
-          }),
-      )
-      .flat(),
-  ).finally(() => {
-    loadingRoutes.value = false;
-  });
+            if (withMeta.seconds / 3600 <= itinerary.limits.hours) {
+              collected.push(withMeta);
+            }
+          })
+          .catch(() => {}),
+      ),
+  );
 
-  routes.value = results
-    .filter((r) => r.seconds / 3600 <= itinerary.limits.hours)
-    .sort((a, b) => a.seconds - b.seconds)
-    .slice(0, itinerary.limits.length);
+  await Promise.allSettled(allPromises);
+  routes.value = collected.sort((a, b) => a.seconds - b.seconds);
+  loadingRoutes.value = false;
 }
 
 async function setMarkersAndRoutes() {
@@ -181,6 +180,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
           <ItineraryController
             v-if="app.mode === 'itinerary'"
             class="bg-white dark:bg-gray-900 rounded p-2.5 mt-2 w-full max-w-100 m-auto"
+            :loading-routes="loadingRoutes"
             @set-routes="setRoutes()"
             @select="
               {
@@ -265,6 +265,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
       <ItineraryDrawer
         :open="app.mode === 'itinerary' && !isOpened"
         :routes="routes"
+        :loading-routes="loadingRoutes"
         @close="
           app.place = null;
           app.mode = 'idle';

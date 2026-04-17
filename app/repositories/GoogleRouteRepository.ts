@@ -33,6 +33,7 @@ export default class RouteRepository {
           },
           travelMode: "DRIVE",
           polylineEncoding: "ENCODED_POLYLINE",
+          polylineQuality: "OVERVIEW",
         }),
       },
     );

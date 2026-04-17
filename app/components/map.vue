@@ -66,7 +66,8 @@ async function createMap() {
 
   clickListener = map.value.addListener("click", async (event: any) => {
     event.stop();
-    if (!event.placeId || app.mode === "itinerary") return;
+    if (!event.placeId || app.mode === "itinerary" || app.mode === "route")
+      return;
 
     const place = new $placesLibrary.Place({ id: event.placeId });
 

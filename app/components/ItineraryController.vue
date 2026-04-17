@@ -3,13 +3,15 @@ import SearchModal from "~/components/modals/searchModal.vue";
 import DurationSlider from "~/components/durationSlider.vue";
 import app from "~/stores/app";
 import { it } from "@nuxt/ui/runtime/locale/index.js";
+const props = defineProps<{
+  loadingRoutes?: boolean;
+}>();
 const itinerary = app.itinerary;
 </script>
 
 <template>
   <div class="w-full space-y-5">
     <div class="flex items-center w-full gap-2">
-
       <UIcon
         name="material-symbols:my-location-outline-rounded"
         class="shrink-0 w-5 h-5"
@@ -35,18 +37,22 @@ const itinerary = app.itinerary;
     </div>
 
     <div class="flex items-center w-full gap-2">
-
-     <UIcon
+      <UIcon
+        v-if="loadingRoutes"
+        name="material-symbols:progress-activity"
+        class="shrink-0 w-4.5 h-4.5 pl-5 d-block animate-spin"
+      />
+      <UIcon
+        v-else
         name="lucide:clock"
         class="shrink-0 w-4.5 h-4.5 pl-5 d-block"
       />
 
-        <DurationSlider
-          v-model="itinerary.limits.hours"
-          @change="$emit('set-routes')"
-          class="px-1"
-        />
+      <DurationSlider
+        v-model="itinerary.limits.hours"
+        @change="$emit('set-routes')"
+        class="px-1"
+      />
     </div>
   </div>
-
 </template>

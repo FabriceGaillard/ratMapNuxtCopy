@@ -9,6 +9,7 @@ import GoogleRouteRepository from "~/repositories/GoogleRouteRepository";
 const snapPoints = reactive([] as (string | number)[]);
 
 const props = defineProps<{
+  loadingRoutes?: boolean;
   routes: (Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>> & {
     marker: Record<string, any>;
     layer: Record<string, any>;
@@ -49,7 +50,17 @@ onMounted(() => {
         <CloseButton @close="$emit('close')" />
       </div>
 
-      <span v-if="!routes.length" class="text-dimmed text-sm">
+      <span
+        v-if="loadingRoutes"
+        class="text-dimmed text-sm flex items-center gap-2"
+      >
+        <UIcon
+          name="material-symbols:hourglass-top-rounded"
+          class="w-4 h-4 animate-spin"
+        />
+        Calcul des itinéraires en cours…
+      </span>
+      <span v-else-if="!routes.length" class="text-dimmed text-sm">
         Aucun itinéraire disponible
       </span>
       <UPageList divide v-else>

@@ -7,6 +7,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "update:modelValue": [value: number];
+  change: [];
 }>();
 
 const displayHours = computed(() => {
@@ -34,31 +35,43 @@ const hideTooltip = () => {
 </script>
 
 <template>
-  <USlider
-    :model-value="modelValue"
-    :min="1"
-    :max="15"
-    :step="1 / 12"
-    class="w-full"
-    color="gray"
-    size="xl"
-    :tooltip="{
-      open: open,
-      content: {
-        side: 'bottom',
-        updatePositionStrategy: 'always',
-        class: 'z-50',
-      },
-      text: displayHours,
-    }"
-    @focus="showTooltip"
-    @blur="hideTooltip"
-    @pointerdown.stop.prevent="showTooltip"
-    @pointerup.stop.prevent="hideTooltip"
-    @touchstart.stop.prevent="showTooltip"
-    @touchend.stop.prevent="hideTooltip"
-    @update:model-value="$emit('update:modelValue', $event!)"
-    @mouseenter="showTooltip"
-    @mouseleave="hideTooltip"
-  />
+  <div class="relative w-full">
+    <USlider
+      :model-value="modelValue"
+      :min="1"
+      :max="15"
+      :step="1 / 12"
+      class="w-full"
+      color="gray"
+      size="xl"
+      :tooltip="{
+        open: open,
+        content: {
+          side: 'bottom',
+          updatePositionStrategy: 'always',
+          class: 'z-50',
+        },
+        text: displayHours,
+      }"
+      @focus="showTooltip"
+      @blur="hideTooltip"
+      @pointerdown.stop.prevent="showTooltip"
+      @pointerup.stop.prevent="
+        () => {
+          hideTooltip();
+          emit('change');
+        }
+      "
+      @touchstart.stop.prevent="showTooltip"
+      @touchend.stop.prevent="
+        () => {
+          hideTooltip();
+          emit('change');
+        }
+      "
+      @update:model-value="$emit('update:modelValue', $event!)"
+      @mouseenter="showTooltip"
+      @mouseleave="hideTooltip"
+    />
+  </div>
 </template>
