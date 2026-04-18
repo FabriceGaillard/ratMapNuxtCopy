@@ -74,7 +74,7 @@ const km = computed(() => {
     :snapPoints="snapPoints"
     @update:activeSnapPoint="handleSnapPointUpdate"
     :ui="{
-      content: '!d-block p-3 pt-3',
+      content: 'max-h-none !d-block p-3 pt-3',
     }"
   >
     <template #content>
