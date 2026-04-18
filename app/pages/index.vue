@@ -109,9 +109,9 @@ async function setRoutes() {
   if (totalCount > app.itinerary.limits.length) {
     const toast = useToast();
     toast.add({
-      title: "Résultats limités",
-      description: `${totalCount} itinéraires trouvés, seuls les ${app.itinerary.limits.length} plus courts sont affichés.`,
+      title: `Affichage limité à ${app.itinerary.limits.length} sur ${totalCount} résultats.`,
       color: "info",
+      orientation: "horizontal",
       duration: 4000,
     });
   }
