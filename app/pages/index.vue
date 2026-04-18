@@ -16,6 +16,7 @@ import { fetchIcons } from "~/helpers/fetch";
 import { layers } from "~/stores/framacarte";
 import AssosationsButton from "~/components/buttons/assosationsButton.vue";
 import BreedingButton from "~/components/buttons/breedingButton.vue";
+import ThemeButton from "~/components/buttons/themeButton.vue";
 
 definePageMeta({
   middleware: ["mobile-check"], // exact match en kebab-case
@@ -215,7 +216,8 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
         />
       </Map>
 
-      <div class="p-4 absolute bottom-5 left-0 z-10">
+      <div class="p-4 absolute bottom-5 left-0 z-10 flex flex-col gap-3">
+        <ThemeButton />
         <UColorModeButton
           size="sm"
           variant="soft"
