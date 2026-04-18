@@ -78,8 +78,7 @@ watch(activeSnapPoint, (val) => {
           Calcul des itinéraires en cours…
         </span>
         <span v-else-if="!routes.length" class="text-dimmed text-sm">
-          Aucun itinéraire disponible pour la durée choisie :
-          {{ formatDuration(app.itinerary.limits.hours * 3600) }}
+          Aucun itinéraire disponible pour la durée choisie
         </span>
         <UPageList
           ref="listEl"
