@@ -4,7 +4,7 @@ import type { DropdownMenuItem } from "@nuxt/ui";
 const appConfig = useAppConfig();
 
 type ThemeName = "default" | "celine";
-const currentTheme = ref<ThemeName>("celine");
+const currentTheme = ref<ThemeName>("default");
 
 const themes: Record<ThemeName, { primary: string; neutral: string }> = {
   default: { primary: "brand", neutral: "slate" },
