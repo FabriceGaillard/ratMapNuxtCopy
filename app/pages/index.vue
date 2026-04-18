@@ -16,7 +16,6 @@ import { fetchIcons } from "~/helpers/fetch";
 import { layers } from "~/stores/framacarte";
 import AssosationsButton from "~/components/buttons/assosationsButton.vue";
 import BreedingButton from "~/components/buttons/breedingButton.vue";
-import MapBoundary from "~/components/mapBoundary.vue";
 
 definePageMeta({
   middleware: ["mobile-check"], // exact match en kebab-case
@@ -96,9 +95,7 @@ async function setRoutes() {
   );
 
   await Promise.allSettled(allPromises);
-  routes.value = collected
-    .sort((a, b) => a.seconds - b.seconds)
-    .slice(0, itinerary.limits.length);
+  routes.value = collected.sort((a, b) => a.seconds - b.seconds);
   loadingRoutes.value = false;
 }
 
@@ -138,6 +135,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
             color="neutral"
             icon="material-symbols:arrow-left-alt-rounded"
             @click="app.mode = 'itinerary'"
+            class="absolute top-6 left-4"
           />
           <SearchModal
             v-if="['idle', 'explore'].includes(app.mode)"
@@ -181,7 +179,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
             </UButton>
           </SearchModal>
           <ItineraryController
-            v-if="app.mode === 'itinerary'"
+            v-if="app.mode === 'itinerary' || app.mode === 'route'"
             class="bg-white dark:bg-gray-900 rounded p-2.5 mt-2 w-full max-w-100 m-auto"
             :loading-routes="loadingRoutes"
             @set-routes="setRoutes()"
@@ -201,8 +199,6 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
           :selected-route="selectedRoute"
           @select="selectRoute($event as RouteWithMeta)"
         />
-
-        <MapBoundary :map="map" />
 
         <MapMarkers
           :map="map"

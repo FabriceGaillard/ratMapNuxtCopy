@@ -114,6 +114,16 @@ function createRoutes() {
         coordinates: [route.destination.lng, route.destination.lat],
       },
     });
+    // Origin dot
+    features.push({
+      type: "Feature",
+      id: `o_${i}`,
+      properties: { index: i },
+      geometry: {
+        type: "Point",
+        coordinates: [route.origin.lng, route.origin.lat],
+      },
+    });
   }
 
   dataLayer = new google.maps.Data({ map: props.map });

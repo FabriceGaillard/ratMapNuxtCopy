@@ -60,6 +60,9 @@ watch(activeSnapPoint, (val, old) => {
             />
             {{ "Itinéraires" }}
           </DialogTitle>
+          <UBadge variant="soft" color="neutral" size="sm" class="ml-0">
+            {{ formatDuration(app.itinerary.limits.hours * 3600) }}
+          </UBadge>
 
           <DialogDescription class="sr-only">
             {{ "Listes disponibles d'itineraires" }}
@@ -78,7 +81,8 @@ watch(activeSnapPoint, (val, old) => {
           Calcul des itinéraires en cours…
         </span>
         <span v-else-if="!routes.length" class="text-dimmed text-sm">
-          Aucun itinéraire disponible
+          Aucun itinéraire disponible pour la durée choisie :
+          {{ formatDuration(app.itinerary.limits.hours * 3600) }}
         </span>
         <UPageList
           ref="listEl"

@@ -17,6 +17,26 @@ const props = defineProps<{
 
 const { $geocodingLibrary } = useNuxtApp();
 
+const snapPoints = reactive<(string | number)[]>([]);
+const activeSnapPoint = ref<string | number | null>(null);
+const descriptionEl = ref<{ $el: HTMLElement } | null>(null);
+
+onMounted(() => {
+  snapPoints.push(...["230px", `${window.innerHeight - 150}px`, 1]);
+});
+
+function handleSnapPointUpdate(a: string | number) {
+  activeSnapPoint.value = a;
+}
+
+function onDescriptionTouchStart(e: TouchEvent) {
+  if (activeSnapPoint.value !== 1) return;
+  const el = descriptionEl.value?.$el;
+  if (el && el.scrollHeight > el.clientHeight) {
+    e.stopPropagation();
+  }
+}
+
 const city = ref("");
 
 watch(
@@ -51,6 +71,8 @@ const km = computed(() => {
     :modal="false"
     :dismissible="false"
     direction="bottom"
+    :snapPoints="snapPoints"
+    @update:activeSnapPoint="handleSnapPointUpdate"
     :ui="{
       content: '!d-block p-3 pt-3',
     }"
@@ -76,7 +98,12 @@ const km = computed(() => {
         <USeparator class="my-3" />
 
         <DialogDescription
+          ref="descriptionEl"
           class="text-sm text-muted whitespace-pre-wrap max-h-[30vh] overflow-auto"
+          :class="
+            activeSnapPoint === 1 ? 'overflow-y-auto' : 'overflow-y-hidden'
+          "
+          @touchstart="onDescriptionTouchStart"
           v-html="
             parseLinksInText(
               route?.marker?.properties.description ?? 'Aucune description',

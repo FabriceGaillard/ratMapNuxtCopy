@@ -7,7 +7,6 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "update:modelValue": [value: number];
-  change: [];
 }>();
 
 const displayHours = computed(() => {
