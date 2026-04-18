@@ -13,7 +13,7 @@ export const layers = reactive([
     id: "221549",
     color: "green",
     icon: "assosiations" as keyof typeof iconUrls,
-    checked: true,
+    checked: false,
     markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
   },
   {

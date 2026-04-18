@@ -59,8 +59,13 @@ function onMarkerSelect(event: any) {
   }
 }
 
+let routesAbort: AbortController | null = null;
+
 async function setRoutes() {
   if (!app.place) return;
+
+  routesAbort?.abort();
+  const abort = (routesAbort = new AbortController());
 
   routes.value = [];
   loadingRoutes.value = true;
@@ -95,10 +100,21 @@ async function setRoutes() {
   );
 
   await Promise.allSettled(allPromises);
-  routes.value = collected
-    .sort((a, b) => a.seconds - b.seconds)
-    .slice(0, app.itinerary.limits.length);
+  if (abort.signal.aborted) return;
+  const sorted = collected.sort((a, b) => a.seconds - b.seconds);
+  const totalCount = sorted.length;
+  routes.value = sorted.slice(0, app.itinerary.limits.length);
   loadingRoutes.value = false;
+
+  if (totalCount > app.itinerary.limits.length) {
+    const toast = useToast();
+    toast.add({
+      title: "Résultats limités",
+      description: `${totalCount} itinéraires trouvés, seuls les ${app.itinerary.limits.length} plus courts sont affichés.`,
+      color: "info",
+      duration: 4000,
+    });
+  }
 }
 
 async function setMarkersAndRoutes() {
@@ -129,16 +145,6 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
         "
       >
         <div class="p-4 absolute top-0 left-0 z-10 w-full">
-          <UButton
-            v-if="app.mode === 'route'"
-            ml-auto
-            size="xl"
-            variant="soft"
-            color="neutral"
-            icon="material-symbols:arrow-left-alt-rounded"
-            @click="app.mode = 'itinerary'"
-            class="absolute top-6 left-4"
-          />
           <SearchModal
             v-if="['idle', 'explore'].includes(app.mode)"
             :formatted-address="app.place?.formattedAddress ?? ''"

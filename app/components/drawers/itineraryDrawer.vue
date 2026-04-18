@@ -97,6 +97,8 @@ watch(activeSnapPoint, (val) => {
               container: 'px-0 w-full',
               body: 'w-full',
             }"
+            class="cursor-pointer"
+            @click="emit('selectRoute', route)"
           >
             <template #body>
               <UBadge size="md" color="neutral" variant="soft">
