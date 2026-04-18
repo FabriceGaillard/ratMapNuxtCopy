@@ -27,11 +27,7 @@ onMounted(() => {
   snapPoints.push(...["230px", `${window.innerHeight - 150}px`, 1]);
 });
 
-function handle(a) {
-  activeSnapPoint.value = a;
-}
-
-watch(activeSnapPoint, (val, old) => {
+watch(activeSnapPoint, (val) => {
   if (val !== 1) {
     listEl.value?.$el?.scrollTo({ top: 0 });
   }
@@ -44,7 +40,7 @@ watch(activeSnapPoint, (val, old) => {
     :dismissible="false"
     direction="bottom"
     :snapPoints="snapPoints"
-    @update:activeSnapPoint="handle"
+    @update:activeSnapPoint="activeSnapPoint = $event"
     :ui="{
       content: 'max-h-none px-3 pt-3 pb-1',
       body: 'overflow-y-auto',
@@ -61,7 +57,8 @@ watch(activeSnapPoint, (val, old) => {
             {{ "Itinéraires" }}
           </DialogTitle>
           <UBadge variant="soft" color="neutral" size="sm" class="ml-0">
-            {{ formatDuration(app.itinerary.limits.hours * 3600) }}
+            pour {{ formatDuration(app.itinerary.limits.hours * 3600) }} de
+            trajet maximum
           </UBadge>
 
           <DialogDescription class="sr-only">
