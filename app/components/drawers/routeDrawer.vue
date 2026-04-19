@@ -50,6 +50,7 @@ const km = computed(() => {
 
 <template>
   <UDrawer
+    :handle="false"
     :modal="false"
     :dismissible="false"
     direction="bottom"

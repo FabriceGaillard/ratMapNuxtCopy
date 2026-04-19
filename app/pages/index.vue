@@ -111,7 +111,7 @@ async function setRoutes() {
     const toast = useToast();
     toast.add({
       title: `Affichage limité à ${app.itinerary.limits.length} sur ${totalCount} résultats.`,
-      color: "info",
+      color: "primary",
       orientation: "horizontal",
       duration: 4000,
     });

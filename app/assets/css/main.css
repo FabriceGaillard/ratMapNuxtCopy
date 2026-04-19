@@ -16,6 +16,18 @@
   --color-brand-800: #376f85;
   --color-brand-900: #1e4a57;
   --color-brand-950: #0f2d36;
+
+  --color-pale-pink-50: #fff8fb;
+  --color-pale-pink-100: #ffecf4;
+  --color-pale-pink-200: #ffd9eb;
+  --color-pale-pink-300: #ffc0de;
+  --color-pale-pink-400: #ffa3d0;
+  --color-pale-pink-500: #f985bf;
+  --color-pale-pink-600: #f066ab;
+  --color-pale-pink-700: #d44d90;
+  --color-pale-pink-800: #a83870;
+  --color-pale-pink-900: #7a2451;
+  --color-pale-pink-950: #3d0f28;
 }
 
 /* Barres transparentes Android/iOS */

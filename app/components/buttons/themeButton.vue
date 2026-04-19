@@ -8,7 +8,7 @@ const currentTheme = ref<ThemeName>("default");
 
 const themes: Record<ThemeName, { primary: string; neutral: string }> = {
   default: { primary: "brand", neutral: "slate" },
-  celine: { primary: "pink", neutral: "olive" },
+  celine: { primary: "pale-pink", neutral: "olive" },
 };
 
 function setTheme(name: ThemeName) {
@@ -16,7 +16,15 @@ function setTheme(name: ThemeName) {
   const theme = themes[name];
   appConfig.ui.colors.primary = theme.primary;
   appConfig.ui.colors.neutral = theme.neutral;
+  localStorage.setItem("theme", name);
 }
+
+onMounted(() => {
+  const saved = localStorage.getItem("theme") as ThemeName | null;
+  if (saved && themes[saved]) {
+    setTheme(saved);
+  }
+});
 
 const items = computed(
   () =>

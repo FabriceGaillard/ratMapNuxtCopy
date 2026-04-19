@@ -40,7 +40,7 @@ export default defineAppConfig({
         {
           color: "primary",
           variant: "solid",
-          class: "!text-black",
+          class: "!text-neutral-800",
         },
       ],
     },

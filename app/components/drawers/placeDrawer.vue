@@ -16,6 +16,7 @@ const props = defineProps<{
 
 <template>
   <UDrawer
+    :handle="false"
     :modal="false"
     :dismissible="false"
     direction="bottom"
