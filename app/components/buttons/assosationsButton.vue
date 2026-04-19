@@ -21,11 +21,13 @@ function toggleLayers() {
   <UButton
     class="w-10 h-10 rounded-xl p-2"
     variant="soft"
-    :class="allChecked ? 'bg-gray-600' : ''"
+    :class="allChecked ? 'bg-neutral-600' : ''"
     color="neutral"
     @click="toggleLayers"
   >
-    <div class="w-full h-full p-1 rounded-full bg-stone-200 dark:bg-gray-700">
+    <div
+      class="w-full h-full p-1 rounded-full bg-neutral-200 dark:bg-neutral-700"
+    >
       <div class="w-full h-full" v-html="icon?.outerHTML" />
     </div>
   </UButton>

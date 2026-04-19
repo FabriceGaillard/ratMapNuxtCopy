@@ -200,7 +200,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
           </SearchModal>
           <ItineraryController
             v-if="app.mode === 'itinerary' || app.mode === 'route'"
-            class="bg-white dark:bg-gray-900 rounded p-2.5 mt-2 w-full max-w-100 m-auto"
+            class="bg-white dark:bg-neutral-900 rounded p-2.5 mt-2 w-full max-w-100 m-auto"
             :loading-routes="loadingRoutes"
             @set-routes="setRoutes()"
             @select="

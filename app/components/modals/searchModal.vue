@@ -129,7 +129,7 @@ async function handleInput(value: string) {
                 color="neutral"
                 @click="open = false"
                 :ui="{
-                  base: 'bg-white dark:bg-gray-900 rounded-full',
+                  base: 'bg-white dark:bg-neutral-900 rounded-full',
                 }"
               />
               <UInput

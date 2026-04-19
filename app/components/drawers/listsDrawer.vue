@@ -85,7 +85,7 @@ const getLayerIcon = (layer: any) => {
                   class="w-5.5 h-5.5 rounded-full bg-elevated flex items-center justify-center shadow-md"
                 >
                   <div
-                    :class="`w-4.5 h-4.5 rounded-full ${colorMap[layer.color] || 'bg-gray-600'} text-inverted flex items-center justify-center`"
+                    :class="`w-4.5 h-4.5 rounded-full ${colorMap[layer.color] || 'bg-neutral-600'} text-inverted flex items-center justify-center`"
                   >
                     <div
                       v-if="getLayerIcon(layer)"

@@ -47,7 +47,7 @@ async function fetchSvg(url: string) {
 // 🧩 Création du marker DOM pur
 async function createMarkerElement(color: string, icon: keyof typeof icons) {
   try {
-    const colorClass = colorMap[color] || "bg-gray-600";
+    const colorClass = colorMap[color] || "bg-neutral-600";
     // cercle blanc (outer)
     const outer = document.createElement("div");
     outer.className =
@@ -68,7 +68,7 @@ async function createMarkerElement(color: string, icon: keyof typeof icons) {
   } catch (error) {
     console.error("Error creating marker element:", error);
     const fallback = document.createElement("div");
-    fallback.className = "w-[22px] h-[22px] rounded-full bg-gray-500";
+    fallback.className = "w-[22px] h-[22px] rounded-full bg-neutral-500";
     return fallback;
   }
 }
