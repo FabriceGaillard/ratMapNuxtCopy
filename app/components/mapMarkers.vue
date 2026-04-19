@@ -94,7 +94,7 @@ async function createMarkers() {
         content,
       });
 
-      marker.addListener("click", async () => {
+      marker.addListener("gmp-click", async () => {
         try {
           const lat = m.geometry.coordinates[1];
           const lng = m.geometry.coordinates[0];

@@ -5,6 +5,7 @@ import app from "~/stores/app";
 
 const props = defineProps<{
   routes?: { path: { lat: number; lng: number }[] }[];
+  markers?: any[];
 }>();
 
 const { $mapsLibrary, $placesLibrary, $coreLibrary } = useNuxtApp();
@@ -94,29 +95,35 @@ watch(
   () => props.routes,
   () => {
     if (!map.value) return;
-    if (!props.routes?.length) {
-      // Centrer sur la France
-      const franceBounds = new google.maps.LatLngBounds(
-        new google.maps.LatLng(43, -5), // SW
-        new google.maps.LatLng(52, 8.5), // NE
-      );
+    if (!props.routes?.length) return;
+    const bounds = new google.maps.LatLngBounds();
+    props.routes.forEach((route) => {
+      route.path.forEach((point) => bounds.extend(point));
+    });
+    map.value.fitBounds(bounds, {
+      bottom: 300,
+      top: 250,
+      left: 50,
+      right: 50,
+    });
+  },
+  { deep: true },
+);
 
-      // const drawerHeight = window.innerHeight * 0.45 + 50;
-      map.value.fitBounds(franceBounds, {
-        bottom: 200,
-      });
-    } else {
-      const bounds = new google.maps.LatLngBounds();
-      props.routes.forEach((route) => {
-        route.path.forEach((point) => bounds.extend(point));
-      });
-      map.value.fitBounds(bounds, {
-        bottom: 300,
-        top: 250,
-        left: 50,
-        right: 50,
-      });
-    }
+watch(
+  () => props.markers,
+  () => {
+    if (!map.value) return;
+    if (!props.markers.length) return;
+    const franceBounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(43, -5), // SW
+      new google.maps.LatLng(52, 8.5), // NE
+    );
+
+    // const drawerHeight = window.innerHeight * 0.45 + 50;
+    map.value.fitBounds(franceBounds, {
+      bottom: 300,
+    });
   },
   { deep: true },
 );

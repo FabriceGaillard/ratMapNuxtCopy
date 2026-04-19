@@ -7,7 +7,11 @@ import CloseButton from "../buttons/closeButton.vue";
 import { colorMap } from "~/utils/colors";
 import { fetchIcons } from "~/helpers/fetch";
 
-const open = ref(false);
+const props = defineProps<{ open: boolean }>();
+const emit = defineEmits<{
+  (e: "update:open", value: boolean): void;
+}>();
+
 const icons = ref<Record<string, SVGElement | null>>({});
 
 onMounted(async () => {
@@ -19,7 +23,7 @@ onMounted(async () => {
 });
 
 watch(
-  () => open.value,
+  () => props.open,
   (v) => (app.listsDrawerOpen = v),
 );
 
@@ -30,18 +34,20 @@ const getLayerIcon = (layer: any) => {
 
 <template>
   <UDrawer
+    :handle="false"
     :modal="false"
+    :dismissible="false"
     :open="open"
     direction="bottom"
+    @update:open="emit('update:open', $event)"
     :ui="{
-      content: 'w-screen max-h-none',
+      content: 'w-screen max-h-none  min-h-[130px]',
     }"
-    :snap-points="[0.4, 1]"
-    @close="open = false"
   >
-    <ListButton @click="open = true" />
+    <ListButton @click="emit('update:open', true)" />
+
     <template #content>
-      <div class="flex items-center gap-2 w-full px-3 pt-3 pb-1">
+      <div class="flex items-center gap-2 w-full px-3 pt-5 pb-3">
         <UIcon
           name="material-symbols:location-on-outline-rounded"
           class="w-5 h-5 ml-1.5"
@@ -54,9 +60,9 @@ const getLayerIcon = (layer: any) => {
           {{ "Listes disponibles pour ce lieu" }}
         </DialogDescription>
 
-        <CloseButton @click="open = false" />
+        <CloseButton @click="emit('update:open', false)" />
       </div>
-      <UPageList divide class="bg-muted p-4 p-0">
+      <UPageList divide class="bg-muted p-0 pb-3">
         <UPageCard
           v-for="layer in layers"
           :key="layer.id"

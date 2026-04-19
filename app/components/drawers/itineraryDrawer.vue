@@ -42,7 +42,7 @@ watch(activeSnapPoint, (val) => {
     :snapPoints="snapPoints"
     @update:activeSnapPoint="activeSnapPoint = $event"
     :ui="{
-      content: 'max-h-none px-3 pt-3 pb-1',
+      content: 'max-h-none px-3 pt-3 pb-1 min-h-[130px]',
       body: 'overflow-y-auto',
     }"
   >

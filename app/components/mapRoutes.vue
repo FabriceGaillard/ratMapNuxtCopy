@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import GoogleRouteRepository from "~/repositories/GoogleRouteRepository";
 import { onUnmounted, watch } from "vue";
+import app from "~/stores/app";
 
 type RouteItem = Awaited<ReturnType<GoogleRouteRepository["computeRoute"]>>;
 

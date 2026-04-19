@@ -17,6 +17,7 @@ import { layers } from "~/stores/framacarte";
 import AssosationsButton from "~/components/buttons/assosationsButton.vue";
 import BreedingButton from "~/components/buttons/breedingButton.vue";
 import ThemeButton from "~/components/buttons/themeButton.vue";
+import { drawer } from "#build/ui";
 
 definePageMeta({
   middleware: ["mobile-check"], // exact match en kebab-case
@@ -35,7 +36,14 @@ const routes = ref<RouteWithMeta[]>([]);
 
 const itinerary = app.itinerary;
 
-const isOpened = ref(false);
+const drawers = reactive({
+  place: {
+    isOpened: false,
+  },
+  lists: {
+    isOpened: false,
+  },
+});
 
 const loadingRoutes = ref(false);
 
@@ -63,6 +71,7 @@ function onMarkerSelect(event: any) {
 let routesAbort: AbortController | null = null;
 
 async function setRoutes() {
+  if (app.mode !== "itinerary") return;
   if (!app.place) return;
 
   routesAbort?.abort();
@@ -109,11 +118,12 @@ async function setRoutes() {
 
   if (totalCount > app.itinerary.limits.length) {
     const toast = useToast();
+    toast.clear();
     toast.add({
       title: `Affichage limité à ${app.itinerary.limits.length} sur ${totalCount} résultats.`,
       color: "primary",
       orientation: "horizontal",
-      duration: 4000,
+      duration: 2000,
     });
   }
 }
@@ -136,6 +146,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
         v-slot="{ map }"
         class="h-screen"
         :routes="routes"
+        :markers="markers"
         @select="
           {
             app.place = $event;
@@ -244,12 +255,15 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
               }
             "
           >
-            <ItineraryButton />
+            <ItineraryButton
+              v-if="app.mode === 'idle'"
+              :disabled="!markers.length"
+            />
           </SearchModal>
           <div class="space-x-2">
             <AssosationsButton :icon="assosiations" />
             <BreedingButton :icon="breeding" />
-            <ListsDrawer />
+            <ListsDrawer v-model:open="drawers.lists.isOpened" />
           </div>
         </div>
       </div>
@@ -257,12 +271,18 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
       <Logo class="absolute bottom-2 left-4.5" />
 
       <PlaceDrawer
-        :open="app.mode === 'explore' || isOpened"
+        :open="app.mode === 'explore' && !drawers.lists.isOpened"
         :place="app.place"
+        @open-list="
+          {
+            drawers.lists.isOpened = true;
+          }
+        "
+        :hasMarkers="!!markers.length"
         @select="
           async () => {
-            await setRoutes();
             app.mode = 'itinerary';
+            await setRoutes();
           }
         "
         :loadingRoutes="loadingRoutes"
@@ -276,7 +296,7 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
         "
       />
       <ItineraryDrawer
-        :open="app.mode === 'itinerary' && !isOpened"
+        :open="app.mode === 'itinerary'"
         :routes="routes"
         :loading-routes="loadingRoutes"
         @close="

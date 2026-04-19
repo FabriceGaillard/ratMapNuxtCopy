@@ -55,7 +55,7 @@ const km = computed(() => {
     :dismissible="false"
     direction="bottom"
     :ui="{
-      content: '!d-block p-3 pt-3',
+      content: '!d-block p-3 pt-5  min-h-[130px]',
     }"
   >
     <template #content>

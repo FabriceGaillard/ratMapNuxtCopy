@@ -11,6 +11,7 @@ const props = defineProps<{
       })
     | null;
   loadingRoutes?: boolean;
+  hasMarkers?: boolean;
 }>();
 </script>
 
@@ -21,7 +22,7 @@ const props = defineProps<{
     :dismissible="false"
     direction="bottom"
     :ui="{
-      content: '!d-block p-3 pt-3 ',
+      content: '!d-block p-3 pt-5 min-h-[130px]',
     }"
   >
     <template #content>
@@ -54,10 +55,21 @@ const props = defineProps<{
       </div>
       <div>
         <UButton
-          v-if="app.mode !== 'itinerary'"
+          v-if="hasMarkers"
           icon="material-symbols:directions-rounded"
           label="itinéraire"
           @click="$emit('select')"
+          class="text-normal font-normal"
+          :loading="loadingRoutes"
+          loading-icon="material-symbols:progress-activity"
+        />
+        <UButton
+          v-else
+          color="neutral"
+          variant="soft"
+          icon="material-symbols:checklist"
+          label="Choisir des points d'intérets"
+          @click="$emit('open-list')"
           class="text-normal font-normal"
           :loading="loadingRoutes"
           loading-icon="material-symbols:progress-activity"

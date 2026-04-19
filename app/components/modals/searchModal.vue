@@ -150,7 +150,7 @@ async function handleInput(value: string) {
             </UFieldGroup>
           </div>
 
-          <div>
+          <!-- <div>
             <UButton
               :avatar="{
                 icon: 'material-symbols:my-location-rounded',
@@ -173,7 +173,7 @@ async function handleInput(value: string) {
               class="w-full p-2 px-0 rounded-none""
               size="lg"
             />
-          </div>
+          </div> -->
         </div>
 
         <UPageList
