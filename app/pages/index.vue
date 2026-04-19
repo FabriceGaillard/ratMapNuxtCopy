@@ -137,6 +137,8 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
   deep: true,
   immediate: true,
 });
+
+const { currentTheme } = useTheme();
 </script>
 
 <template>
@@ -156,6 +158,15 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
           }
         "
       >
+        <div
+          v-if="currentTheme === 'celine'"
+          class="absolute inset-0 z-[5] pointer-events-none"
+          style="
+            background: rgba(255, 182, 193, 0.45);
+            mix-blend-mode: multiply;
+          "
+        />
+
         <div class="p-4 absolute top-0 left-0 z-10 w-full">
           <SearchModal
             v-if="['idle', 'explore'].includes(app.mode)"
