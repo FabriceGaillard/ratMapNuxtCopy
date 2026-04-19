@@ -80,7 +80,6 @@ const km = computed(() => {
         <DialogDescription
           ref="descriptionEl"
           class="text-muted text-sm whitespace-pre-wrap py-2 pr-2 max-h-[25vh] overflow-auto w-full"
-          @touchstart="onDescriptionTouchStart"
           v-html="
             parseLinksInText(
               route?.marker?.properties.description ?? 'Aucune description',
