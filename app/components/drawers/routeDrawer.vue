@@ -17,25 +17,7 @@ const props = defineProps<{
 
 const { $geocodingLibrary } = useNuxtApp();
 
-const snapPoints = reactive<(string | number)[]>([]);
 const activeSnapPoint = ref<string | number | null>(null);
-const descriptionEl = ref<{ $el: HTMLElement } | null>(null);
-
-onMounted(() => {
-  snapPoints.push(...["230px", `${window.innerHeight - 150}px`, 1]);
-});
-
-function handleSnapPointUpdate(a: string | number) {
-  activeSnapPoint.value = a;
-}
-
-function onDescriptionTouchStart(e: TouchEvent) {
-  if (activeSnapPoint.value !== 1) return;
-  const el = descriptionEl.value?.$el;
-  if (el && el.scrollHeight > el.clientHeight) {
-    e.stopPropagation();
-  }
-}
 
 const city = ref("");
 
@@ -71,10 +53,8 @@ const km = computed(() => {
     :modal="false"
     :dismissible="false"
     direction="bottom"
-    :snapPoints="snapPoints"
-    @update:activeSnapPoint="handleSnapPointUpdate"
     :ui="{
-      content: 'max-h-none !d-block p-3 pt-3',
+      content: '!d-block p-3 pt-3',
     }"
   >
     <template #content>
@@ -99,10 +79,7 @@ const km = computed(() => {
 
         <DialogDescription
           ref="descriptionEl"
-          class="text-sm text-muted whitespace-pre-wrap max-h-[30vh] overflow-auto"
-          :class="
-            activeSnapPoint === 1 ? 'overflow-y-auto' : 'overflow-y-hidden'
-          "
+          class="text-muted text-sm whitespace-pre-wrap py-2 pr-2 max-h-[25vh] overflow-auto w-full"
           @touchstart="onDescriptionTouchStart"
           v-html="
             parseLinksInText(
