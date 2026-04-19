@@ -53,15 +53,15 @@ function getStyle(feature: google.maps.Data.Feature) {
   const index = isOutline ? -numId - 1 : numId;
   const isSelected = index === selectedIndex;
 
-  if (isOutline) {
-    return {
-      strokeColor: isSelected ? "#365C80" : "#403CE6",
-      strokeWeight: 8,
-      strokeOpacity: 1,
-      zIndex: isSelected ? 10 : 1,
-      clickable: false,
-    };
-  }
+  // if (isOutline) {
+  //   return {
+  //     strokeColor: isSelected ? "#365C80" : "#403CE6",
+  //     strokeWeight: 8,
+  //     strokeOpacity: 1,
+  //     zIndex: isSelected ? 10 : 1,
+  //     clickable: false,
+  //   };
+  // }
 
   return {
     strokeColor: isSelected ? "#71E8FE" : "#BBCAFB",
@@ -92,12 +92,12 @@ function createRoutes() {
     const coords = route.path.map((p) => [p.lng, p.lat]);
 
     // Outline (negative id = not clickable outline)
-    features.push({
-      type: "Feature",
-      id: -(i + 1),
-      properties: { index: i },
-      geometry: { type: "LineString", coordinates: coords },
-    });
+    // features.push({
+    //   type: "Feature",
+    //   id: -(i + 1),
+    //   properties: { index: i },
+    //   geometry: { type: "LineString", coordinates: coords },
+    // });
     // Main line
     features.push({
       type: "Feature",
@@ -115,14 +115,27 @@ function createRoutes() {
         coordinates: [route.destination.lng, route.destination.lat],
       },
     });
+    // // Origin dot
+    // features.push({
+    //   type: "Feature",
+    //   id: `o_${i}`,
+    //   properties: { index: i },
+    //   geometry: {
+    //     type: "Point",
+    //     coordinates: [route.origin.lng, route.origin.lat],
+    //   },
+    // });
+  }
+
+  if (props.routes[0]) {
     // Origin dot
     features.push({
       type: "Feature",
-      id: `o_${i}`,
-      properties: { index: i },
+      id: "o_0",
+      properties: { index: 0 },
       geometry: {
         type: "Point",
-        coordinates: [route.origin.lng, route.origin.lat],
+        coordinates: [props.routes[0].origin.lng, props.routes[0].origin.lat],
       },
     });
   }
