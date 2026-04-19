@@ -209,6 +209,8 @@ watch(() => checkedLayers.value.map((l) => l.id), setMarkersAndRoutes, {
           @select="selectRoute($event as RouteWithMeta)"
         />
 
+        <MapBoundary :map="map" />
+
         <MapMarkers
           :map="map"
           :markers="markers"
