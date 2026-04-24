@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     client: false,
   },
 
-  modules: ["@nuxt/eslint", "@nuxt/ui", "@vite-pwa/nuxt"],
+  modules: ["@nuxt/eslint", "@nuxt/ui", "@vite-pwa/nuxt", "nuxt-auth-utils"],
 
   devtools: {
     enabled: true,
@@ -29,11 +29,25 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    allowedEmails: "",
+    session: {
+      maxAge: 60 * 60 * 24 * 7, // 7 jours
+    },
+    oauth: {
+      google: {
+        clientId: "",
+        clientSecret: "",
+      },
+    },
     public: {
       googleMapsApiKey: "",
       googleMapId: "",
       nodeEnv: "",
     },
+  },
+
+  nitro: {
+    preset: "vercel",
   },
 
   pwa: {
