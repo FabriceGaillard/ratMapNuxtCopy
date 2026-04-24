@@ -3,13 +3,11 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return;
   }
 
-  const config = useRuntimeConfig();
-
   if (to.path === "/login") {
     return;
   }
 
-  if (config.public.nodeEnv === "development") {
+  if (import.meta.dev) {
     return;
   }
 

@@ -6,63 +6,28 @@ export const iconUrls = {
   breeding: "/icons/rat.svg",
 };
 
-export const layers = reactive([
-  {
-    label: "Tops Assos",
-    description: "Description",
-    id: "221549",
-    color: "green",
-    icon: "assosiations" as keyof typeof iconUrls,
-    checked: false,
-    markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
-  },
-  {
-    label: "Mauvaises Assos",
-    description: "Description",
-    id: "221570",
-    color: "red",
-    icon: "assosiations" as keyof typeof iconUrls,
-    checked: false,
-    markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
-  },
-  {
-    label: "Autres Assos",
-    description: "Description",
-    id: "221571",
-    color: "blue",
-    icon: "assosiations" as keyof typeof iconUrls,
-    checked: false,
-    markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
-  },
-  {
-    label: "SPAS",
-    description: "Description",
-    id: "221574",
-    color: "yellow",
-    icon: "assosiations" as keyof typeof iconUrls,
-    checked: false,
-    markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
-  },
+type LayerConfig = {
+  label: string;
+  id: string;
+  color: string;
+  icon: keyof typeof iconUrls;
+};
 
-  {
-    label: "Élevages",
-    description: "Description",
-    id: "228024",
-    color: "purple",
-    icon: "breeding" as keyof typeof iconUrls,
-    checked: false,
-    markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
-  },
-  {
-    label: "Élevages Potentiels",
-    description: "Description",
-    id: "230084",
-    color: "orange",
-    icon: "breeding" as keyof typeof iconUrls,
-    checked: false,
-    markers: [] as Awaited<ReturnType<FramacarteRepository["getMarkers"]>>,
-  },
-]);
+export const layers = reactive(
+  [] as (LayerConfig & {
+    description: string;
+    checked: boolean;
+    markers: Awaited<ReturnType<FramacarteRepository["getMarkers"]>>;
+  })[],
+);
+
+export async function initLayers() {
+  if (layers.length) return;
+  const configs = await $fetch<LayerConfig[]>("/api/layers");
+  configs.forEach((c) =>
+    layers.push({ ...c, description: "", checked: false, markers: [] }),
+  );
+}
 
 export const checkedLayers = computed(() =>
   layers.filter((layer) => layer.checked),

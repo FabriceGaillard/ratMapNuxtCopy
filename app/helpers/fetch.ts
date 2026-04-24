@@ -1,4 +1,5 @@
 import { iconUrls } from "~/stores/framacarte";
+import DOMPurify from "dompurify";
 
 export default async function fetch(
   input: RequestInfo,
@@ -13,10 +14,14 @@ export default async function fetch(
 
 export async function fetchSvg(url: string): Promise<SVGElement> {
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch SVG: ${res.status}`);
   const text = await res.text();
+
+  const clean = DOMPurify.sanitize(text, {
+    USE_PROFILES: { svg: true, svgFilters: true },
+  });
+
   const parser = new DOMParser();
-  return parser.parseFromString(text, "image/svg+xml")
+  return parser.parseFromString(clean, "image/svg+xml")
     .documentElement as unknown as SVGElement;
 }
 

@@ -3,7 +3,12 @@ import ListsDrawer from "~/components/drawers/listsDrawer.vue";
 import Map from "~/components/map.vue";
 import MapMarkers from "~/components/mapMarkers.vue";
 import MapRoutes from "~/components/mapRoutes.vue";
-import { setMarkers, checkedLayers, markers } from "~/stores/framacarte";
+import {
+  setMarkers,
+  checkedLayers,
+  markers,
+  initLayers,
+} from "~/stores/framacarte";
 import GoogleRouteRepository from "~/repositories/GoogleRouteRepository";
 import SearchModal from "~/components/modals/searchModal.vue";
 import PlaceDrawer from "~/components/drawers/placeDrawer.vue";
@@ -24,6 +29,7 @@ definePageMeta({
 });
 
 const { assosiations, breeding } = await fetchIcons();
+await initLayers();
 
 type RouteWithMeta = Awaited<
   ReturnType<GoogleRouteRepository["computeRoute"]>

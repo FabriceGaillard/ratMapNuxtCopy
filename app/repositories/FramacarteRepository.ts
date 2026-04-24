@@ -1,7 +1,7 @@
 import fetch from "~/helpers/fetch";
 
 export default class FramacarteRepository {
-  private workerUrl = "https://sweet-base-5622.johanna-girodolle.workers.dev/";
+  private workerUrl = useRuntimeConfig().public.framacarteWorkerUrl;
   private baseUrl = "https://framacarte.org/fr";
 
   /**
