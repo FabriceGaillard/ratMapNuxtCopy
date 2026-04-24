@@ -17,7 +17,7 @@ const errorMessage = computed(() => {
 <template>
   <main class="h-screen flex flex-col justify-center items-center gap-6">
     <div class="flex flex-col items-center gap-2 text-center">
-      <h1 class="text-2xl font-bold text-white">BoggleMaps</h1>
+      <h1 class="text-2xl font-bold">BoggleMaps</h1>
       <p class="text-sm text-neutral-400">
         La carte collaborative des associations de rats
       </p>
