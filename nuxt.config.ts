@@ -88,6 +88,7 @@ export default defineNuxtConfig({
           "'self'",
           "data:", // requis pour Google Maps (PNG base64)
           "https://maps.googleapis.com",
+          "https://places.googleapis.com",
           "https://routes.googleapis.com",
           "https://nominatim.openstreetmap.org",
           "https://framacarte.org",
