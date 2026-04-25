@@ -25,7 +25,7 @@ import ThemeButton from "~/components/buttons/themeButton.vue";
 import { drawer } from "#build/ui";
 
 definePageMeta({
-  middleware: ["mobile-check"], // exact match en kebab-case
+  middleware: ["mobile-check"],
 });
 
 const { assosiations, breeding } = await fetchIcons();
