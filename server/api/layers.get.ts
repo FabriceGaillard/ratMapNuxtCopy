@@ -1,15 +1,20 @@
 import type { H3Event } from "h3";
 
 const LAYERS = [
-  { label: "Tops Assos", id: "221549", color: "green", icon: "assosiations" },
   {
-    label: "Mauvaises Assos",
+    label: "Assos spécialisées",
+    id: "221549",
+    color: "green",
+    icon: "assosiations",
+  },
+  {
+    label: "Assos à éviter",
     id: "221570",
     color: "red",
     icon: "assosiations",
   },
   { label: "Autres Assos", id: "221571", color: "blue", icon: "assosiations" },
-  { label: "SPAS", id: "221574", color: "yellow", icon: "assosiations" },
+  { label: "SPAs", id: "221574", color: "yellow", icon: "assosiations" },
   { label: "Élevages", id: "228024", color: "purple", icon: "breeding" },
   {
     label: "Élevages Potentiels",
