@@ -7,21 +7,23 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return;
   }
 
-  if (import.meta.dev) {
-    return;
-  }
+  return;
 
-  const userAgent =
-    navigator.userAgent || navigator.vendor || (window as any).opera;
+  // if (import.meta.dev) {
+  //   return;
+  // }
 
-  const isMobile =
-    /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
-      userAgent,
-    ) && window.matchMedia("(max-width: 768px)").matches;
+  // const userAgent =
+  //   navigator.userAgent || navigator.vendor || (window as any).opera;
 
-  const isInstalled = window.matchMedia("(display-mode: standalone)").matches;
+  // const isMobile =
+  //   /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+  //     userAgent,
+  //   ) && window.matchMedia("(max-width: 768px)").matches;
 
-  if (!isMobile || !isInstalled) {
-    return navigateTo("/install");
-  }
+  // const isInstalled = window.matchMedia("(display-mode: standalone)").matches;
+
+  // if (!isMobile || !isInstalled) {
+  //   return navigateTo("/install");
+  // }
 });
