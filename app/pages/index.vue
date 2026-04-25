@@ -18,11 +18,9 @@ import ItineraryDrawer from "~/components/drawers/itineraryDrawer.vue";
 import ItineraryButton from "~/components/buttons/itineraryButton.vue";
 import { ObjectHelper } from "~/utils/ObjectHelper";
 import { fetchIcons } from "~/helpers/fetch";
-import { layers } from "~/stores/framacarte";
 import AssosationsButton from "~/components/buttons/assosationsButton.vue";
 import BreedingButton from "~/components/buttons/breedingButton.vue";
 import ThemeButton from "~/components/buttons/themeButton.vue";
-import { drawer } from "#build/ui";
 
 definePageMeta({
   middleware: ["mobile-check"],
