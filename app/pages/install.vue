@@ -10,12 +10,6 @@ onMounted(() => {
 
 <template>
   <main class="h-screen flex flex-col justify-center items-center">
-    <UButton
-      label="test"
-      variant="soft"
-      color="neutral"
-      :icon="'material-symbols:arrow-back'"
-    />
     <div class="flex flex-col items-center gap-5">
       <UButton
         label="Install"

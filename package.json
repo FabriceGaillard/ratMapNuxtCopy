@@ -1,5 +1,5 @@
 {
-  "name": "boggle-rat",
+  "name": "boggle-maps",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,10 +15,9 @@
     "@iconify-json/lucide": "^1.2.103",
     "@iconify-json/simple-icons": "^1.2.79",
     "@nuxt/ui": "^4.6.1",
-    "@vite-pwa/nuxt": "^0.6.0",
+    "@vite-pwa/nuxt": "^1.1.1",
     "decode-google-map-polyline": "^1.0.1",
     "dompurify": "^3.4.1",
-    "eruda": "^3.4.3",
     "nuxt": "^4.4.2",
     "nuxt-auth-utils": "^0.5.29",
     "nuxt-security": "2.5.1",

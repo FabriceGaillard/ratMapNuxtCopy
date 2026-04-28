@@ -1,10 +1,4 @@
 <script setup lang="ts">
-onMounted(() => {
-  if (import.meta.client && window.location.search.includes("debug")) {
-    import("eruda").then((e) => e.default.init());
-  }
-});
-
 useHead({
   meta: [
     { charset: "utf-8" },
