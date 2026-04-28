@@ -115,7 +115,6 @@ export default defineNuxtConfig({
   pwa: {
     manifest: {
       name: "BoggleMaps",
-      short_name: "BoggleMaps",
       description: "Une carte collaborative des associations de rats.",
       theme_color: "#1a1a1a",
       background_color: "#000000",
@@ -134,18 +133,6 @@ export default defineNuxtConfig({
           sizes: "512x512",
           type: "image/png",
           purpose: "any",
-        },
-        {
-          src: "/pwa-maskable-192x192.png",
-          sizes: "192x192",
-          type: "image/png",
-          purpose: "maskable",
-        },
-        {
-          src: "/pwa-maskable-512x512.png",
-          sizes: "512x512",
-          type: "image/png",
-          purpose: "maskable",
         },
       ],
       categories: ["maps"],
