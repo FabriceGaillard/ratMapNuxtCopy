@@ -117,7 +117,7 @@ export default defineNuxtConfig({
       name: "BoggleMaps",
       short_name: "BoggleMaps",
       description: "Une carte collaborative des associations de rats.",
-      theme_color: "transparent",
+      theme_color: "#1a1a1a",
       background_color: "#000000",
       display: "standalone",
       scope: "/",
@@ -148,7 +148,6 @@ export default defineNuxtConfig({
           purpose: "maskable",
         },
       ],
-      screenshots: [],
       categories: ["maps"],
     },
     workbox: {
