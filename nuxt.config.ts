@@ -21,7 +21,19 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
-  routeRules: {},
+  routeRules: {
+    "/sw.js": {
+      headers: {
+        "Cache-Control": "public, max-age=0, must-revalidate",
+      },
+    },
+    "/manifest.webmanifest": {
+      headers: {
+        "Content-Type": "application/manifest+json",
+        "Cache-Control": "public, max-age=0, must-revalidate",
+      },
+    },
+  },
 
   compatibilityDate: "2025-01-15",
 
@@ -126,13 +138,11 @@ export default defineNuxtConfig({
           src: "/pwa-192x192.png",
           sizes: "192x192",
           type: "image/png",
-          purpose: "any",
         },
         {
           src: "/pwa-512x512.png",
           sizes: "512x512",
           type: "image/png",
-          purpose: "any",
         },
       ],
       categories: ["maps"],
