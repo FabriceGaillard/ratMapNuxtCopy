@@ -1,8 +1,9 @@
 // ~/composables/usePwaInstallPrompt.ts
 import { ref, onMounted } from "vue";
+import { usePwaDeferred } from "~/plugins/pwa-install.client";
 
 export const usePwaInstallPrompt = () => {
-  const deferredPrompt = ref<BeforeInstallPromptEvent | null>(null);
+  const deferredPrompt = usePwaDeferred();
   const status = ref<
     "pending" | "readyToInstall" | "installed" | "iosBanner" | "unavailable"
   >("unavailable");
@@ -29,12 +30,14 @@ export const usePwaInstallPrompt = () => {
       return;
     }
 
-    // Chrome / Android
-    window.addEventListener("beforeinstallprompt", (e: Event) => {
-      console.log("Before install prompt event triggered");
-      e.preventDefault();
-      deferredPrompt.value = e as BeforeInstallPromptEvent;
+    // Si l'event a déjà été capturé par le plugin avant le montage
+    if (deferredPrompt.value) {
       status.value = "readyToInstall";
+    }
+
+    // Au cas où l'event arrive après le montage
+    watch(deferredPrompt, (val) => {
+      if (val) status.value = "readyToInstall";
     });
 
     // iOS
@@ -46,6 +49,5 @@ export const usePwaInstallPrompt = () => {
     }
   });
 
-  // 🔹 on exporte juste le composable, pas deferredPrompt directement
   return { status, triggerPrompt, deferredPrompt };
 };
