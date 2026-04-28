@@ -18,6 +18,7 @@
     "@vite-pwa/nuxt": "^0.6.0",
     "decode-google-map-polyline": "^1.0.1",
     "dompurify": "^3.4.1",
+    "eruda": "^3.4.3",
     "nuxt": "^4.4.2",
     "nuxt-auth-utils": "^0.5.29",
     "nuxt-security": "2.5.1",
