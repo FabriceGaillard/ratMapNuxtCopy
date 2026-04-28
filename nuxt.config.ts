@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@vite-pwa/nuxt",
     "nuxt-auth-utils",
-    "nuxt-security",
+    // "nuxt-security",
   ],
 
   devtools: {
@@ -57,60 +57,60 @@ export default defineNuxtConfig({
     preset: "vercel",
   },
 
-  security: {
-    headers: {
-      contentSecurityPolicy: {
-        "default-src": ["'self'"],
-        "script-src": [
-          "'self'",
-          "'unsafe-inline'", // requis pour Nuxt SPA
-          "'wasm-unsafe-eval'", // requis pour WebAssembly (Google Maps)
-          "https://maps.googleapis.com",
-          "https://maps.gstatic.com",
-        ],
-        "worker-src": ["'self'", "blob:"], // requis pour Google Maps Web Workers
-        "style-src": [
-          "'self'",
-          "'unsafe-inline'",
-          "https://fonts.googleapis.com",
-        ],
-        "img-src": [
-          "'self'",
-          "data:",
-          "blob:",
-          "https://maps.googleapis.com",
-          "https://maps.gstatic.com",
-          "https://tile.openstreetmap.org",
-          "https://framacarte.org",
-        ],
-        "font-src": ["'self'", "https://fonts.gstatic.com"],
-        "connect-src": [
-          "'self'",
-          "data:", // requis pour Google Maps (PNG base64)
-          "https://maps.googleapis.com",
-          "https://places.googleapis.com",
-          "https://routes.googleapis.com",
-          "https://nominatim.openstreetmap.org",
-          "https://framacarte.org",
-          "https://sweet-base-5622.johanna-girodolle.workers.dev",
-          "https://accounts.google.com",
-          "https://www.gstatic.com",
-          "https://api.iconify.design", // requis pour Nuxt UI (chargement dynamique des icônes)
-        ],
-        "frame-src": ["'none'"],
-        "object-src": ["'none'"],
-      },
-      xFrameOptions: "DENY",
-      xContentTypeOptions: "nosniff",
-      referrerPolicy: "strict-origin-when-cross-origin",
-      permissionsPolicy: {
-        geolocation: ["self"],
-        camera: [],
-        microphone: [],
-      },
-    },
-    rateLimiter: false, // pas de KV store dispo sur Vercel sans config supplémentaire
-  },
+  // security: {
+  //   headers: {
+  //     contentSecurityPolicy: {
+  //       "default-src": ["'self'"],
+  //       "script-src": [
+  //         "'self'",
+  //         "'unsafe-inline'", // requis pour Nuxt SPA
+  //         "'wasm-unsafe-eval'", // requis pour WebAssembly (Google Maps)
+  //         "https://maps.googleapis.com",
+  //         "https://maps.gstatic.com",
+  //       ],
+  //       "worker-src": ["'self'", "blob:"], // requis pour Google Maps Web Workers
+  //       "style-src": [
+  //         "'self'",
+  //         "'unsafe-inline'",
+  //         "https://fonts.googleapis.com",
+  //       ],
+  //       "img-src": [
+  //         "'self'",
+  //         "data:",
+  //         "blob:",
+  //         "https://maps.googleapis.com",
+  //         "https://maps.gstatic.com",
+  //         "https://tile.openstreetmap.org",
+  //         "https://framacarte.org",
+  //       ],
+  //       "font-src": ["'self'", "https://fonts.gstatic.com"],
+  //       "connect-src": [
+  //         "'self'",
+  //         "data:", // requis pour Google Maps (PNG base64)
+  //         "https://maps.googleapis.com",
+  //         "https://places.googleapis.com",
+  //         "https://routes.googleapis.com",
+  //         "https://nominatim.openstreetmap.org",
+  //         "https://framacarte.org",
+  //         "https://sweet-base-5622.johanna-girodolle.workers.dev",
+  //         "https://accounts.google.com",
+  //         "https://www.gstatic.com",
+  //         "https://api.iconify.design", // requis pour Nuxt UI (chargement dynamique des icônes)
+  //       ],
+  //       "frame-src": ["'none'"],
+  //       "object-src": ["'none'"],
+  //     },
+  //     xFrameOptions: "DENY",
+  //     xContentTypeOptions: "nosniff",
+  //     referrerPolicy: "strict-origin-when-cross-origin",
+  //     permissionsPolicy: {
+  //       geolocation: ["self"],
+  //       camera: [],
+  //       microphone: [],
+  //     },
+  //   },
+  //   rateLimiter: false, // pas de KV store dispo sur Vercel sans config supplémentaire
+  // },
 
   pwa: {
     manifest: {
