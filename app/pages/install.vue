@@ -9,6 +9,20 @@ onMounted(() => {
 </script>
 
 <template>
+  <div
+    style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      background: red;
+      color: white;
+      padding: 8px;
+      font-size: 12px;
+    "
+  >
+    PWA status: {{ status }}
+  </div>
   <main class="h-screen flex flex-col justify-center items-center">
     <div class="flex flex-col items-center gap-5">
       <UButton
