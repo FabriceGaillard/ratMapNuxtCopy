@@ -1,10 +1,20 @@
 <script setup lang="ts">
 const router = useRouter();
-const { status, triggerPrompt } = usePwaInstallPrompt();
+const { $pwa } = useNuxtApp();
 
 onMounted(() => {
   const isInstalled = window.matchMedia("(display-mode: standalone)").matches;
   if (isInstalled) router.push("/");
+
+  // Fallback Android : si après 3s l'event n'est pas disponible
+  const isAndroid = /android/i.test(navigator.userAgent);
+  if (isAndroid) {
+    setTimeout(() => {
+      if (!$pwa?.showInstallPrompt) {
+        router.replace("/?androidInstall=true");
+      }
+    }, 3000);
+  }
 });
 </script>
 
@@ -12,29 +22,22 @@ onMounted(() => {
   <main class="h-screen flex flex-col justify-center items-center">
     <div class="flex flex-col items-center gap-5">
       <UButton
-        label="Install"
         variant="soft"
         color="neutral"
         :icon="
-          status === 'unavailable'
-            ? 'material-symbols:close'
-            : 'material-symbols:download'
+          $pwa?.showInstallPrompt
+            ? 'material-symbols:download'
+            : 'material-symbols:close'
         "
-        :disabled="status === 'unavailable'"
-        :is-loading="status === 'pending'"
-        @click="triggerPrompt"
+        :disabled="!$pwa?.showInstallPrompt"
+        @click="$pwa?.install()"
       >
         <span>{{
-          status === "unavailable" ? "Installation impossible" : "Installer"
+          $pwa?.showInstallPrompt ? "Installer" : "Installation impossible"
         }}</span>
-        <LoadingSpinner
-          v-if="status === 'pending'"
-          color="white"
-          class="size-5"
-        />
       </UButton>
       <p
-        v-if="status === 'unavailable'"
+        v-if="!$pwa?.showInstallPrompt"
         class="max-w-xs text-center text-muted"
       >
         L'installation n'est pas disponible sur cet appareil.
