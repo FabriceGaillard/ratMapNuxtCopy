@@ -1,16 +1,26 @@
 <script setup lang="ts">
-const router = useRouter();
 const { status, triggerPrompt } = usePwaInstallPrompt();
-
-onMounted(() => {
-  const isInstalled = window.matchMedia("(display-mode: standalone)").matches;
-  if (isInstalled) router.push("/");
-});
 </script>
 
 <template>
   <main class="h-screen flex flex-col justify-center items-center">
-    <div class="flex flex-col items-center gap-5">
+    <div
+      v-if="status === 'installed'"
+      class="flex flex-col items-center gap-3 text-center"
+    >
+      <UIcon
+        name="material-symbols:check-circle-outline"
+        class="size-12 text-success"
+      />
+      <p class="font-semibold">Application déjà installée</p>
+      <p class="max-w-xs text-muted text-sm">
+        L'application est déjà installée sur cet appareil.
+      </p>
+      <UButton variant="soft" color="neutral" to="/">
+        Retour à l'accueil
+      </UButton>
+    </div>
+    <div v-else class="flex flex-col items-center gap-5">
       <UButton
         label="Install"
         variant="soft"
