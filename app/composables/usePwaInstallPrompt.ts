@@ -9,18 +9,18 @@ export const usePwaInstallPrompt = () => {
   >("unavailable");
 
   const triggerPrompt = async () => {
-    if (deferredPrompt.value) {
-      status.value = "pending";
-      await deferredPrompt.value.prompt();
-      const choiceResult = await deferredPrompt.value.userChoice;
-      if (choiceResult.outcome === "accepted") {
-        status.value = "installed";
-      } else {
-        status.value = "readyToInstall";
-      }
-      // on vide l'événement après utilisation
-      deferredPrompt.value = null;
+    if (status.value === "installed" || !deferredPrompt.value) return;
+    status.value = "pending";
+    await deferredPrompt.value.prompt();
+    const choiceResult = await deferredPrompt.value.userChoice;
+    if (choiceResult.outcome === "accepted") {
+      status.value = "installed";
+      localStorage.setItem("pwa-installed", "true");
+    } else {
+      status.value = "readyToInstall";
     }
+    // on vide l'événement après utilisation
+    deferredPrompt.value = null;
   };
 
   onMounted(() => {
