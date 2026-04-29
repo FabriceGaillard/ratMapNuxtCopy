@@ -10,4 +10,8 @@ export default defineNuxtPlugin(() => {
     e.preventDefault();
     deferredPrompt.value = e as BeforeInstallPromptEvent;
   });
+  window.addEventListener("appinstalled", () => {
+    console.log("[PWA] appinstalled fired");
+    localStorage.setItem("pwa-installed", "true");
+  });
 });

@@ -24,7 +24,9 @@ export const usePwaInstallPrompt = () => {
   };
 
   onMounted(() => {
-    const isInstalled = window.matchMedia("(display-mode: standalone)").matches;
+    const isInstalled =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      localStorage.getItem("pwa-installed") === "true";
     if (isInstalled) {
       status.value = "installed";
       return;
