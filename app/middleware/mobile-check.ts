@@ -21,7 +21,11 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   const isInstalled = window.matchMedia("(display-mode: standalone)").matches;
 
-  if (!isMobile || !isInstalled) {
+  if (!isMobile) {
+    return navigateTo("/desktop");
+  }
+
+  if (!isInstalled) {
     return navigateTo("/install");
   }
 });
